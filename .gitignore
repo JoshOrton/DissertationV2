@@ -1,4 +1,4 @@
-*.imi
+*.iml
 .idea/*
 out/*
 apache-tomcat-*/*
