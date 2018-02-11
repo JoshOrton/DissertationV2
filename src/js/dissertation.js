@@ -27,22 +27,14 @@ console.log(statementArray);
 console.log(againstStatements);
 
 $(StatementListDiv).click(function (event) {
-    //TODO Clear Statement, For and Against.
-
-    /*populateStatementsAsUnorderedList(AgainstListDiv,againstStatements[statementId]);
-    populateStatementsAsUnorderedList(ForListDiv,forStatements[statementId]);*/
-    var text = $(event.target).text();
     var statementId = event.target.parentNode.id.replace("li-id-","");
     hideAllDivElements(ForListDiv);
     hideAllDivElements(AgainstListDiv);
 
     showSpecifiedDivElements(ForListDiv, statementId);
     showSpecifiedDivElements(AgainstListDiv, statementId);
-    console.log(text);
+
 });
-
-
-// Print specified Array into specified div as unordered List.
 
 //More like populate really.
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
