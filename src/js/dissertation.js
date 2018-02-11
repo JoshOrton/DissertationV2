@@ -14,8 +14,8 @@ var forStatements = populateReasoningStatementArray(statementArray, unformattedF
 
 populateStatementsAsUnorderedList(StatementListDiv, statementArray, false);
 
-populateStatementsAsUnorderedList(AgainstListDiv,againstStatements,true );
-populateStatementsAsUnorderedList(ForListDiv,forStatements, true);
+populateStatementsAsUnorderedList(AgainstListDiv,againstStatements, true);
+populateStatementsAsUnorderedList(ForListDiv,forStatements,true);
 
 //TODO generate statements for once clicked on statement.
 //populateStatementsAsUnorderedList(AgainstListDiv, againstStatements);
@@ -28,14 +28,16 @@ console.log(againstStatements);
 
 $(StatementListDiv).click(function (event) {
     //TODO Clear Statement, For and Against.
-    hideArrayAsUnorderedList(ForListDiv);
-    hideArrayAsUnorderedList(AgainstListDiv);
+
     /*populateStatementsAsUnorderedList(AgainstListDiv,againstStatements[statementId]);
     populateStatementsAsUnorderedList(ForListDiv,forStatements[statementId]);*/
     var text = $(event.target).text();
-    var statementId= event.target.parentNode.id.replace("li-id-","");
-    populateStatementsAsUnorderedList(ForListDiv, forStatements[statementId]);
-    populateStatementsAsUnorderedList(AgainstListDiv, againstStatements[statementId]);
+    var statementId = event.target.parentNode.id.replace("li-id-","");
+    hideAllDivElements(ForListDiv);
+    hideAllDivElements(AgainstListDiv);
+
+    showSpecifiedDivElements(ForListDiv, statementId);
+    showSpecifiedDivElements(AgainstListDiv, statementId);
     console.log(text);
 });
 
@@ -43,11 +45,12 @@ $(StatementListDiv).click(function (event) {
 // Print specified Array into specified div as unordered List.
 
 //More like populate really.
-function populateStatementsAsUnorderedList(div, arr){
+function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
         var anchorItem = document.createElement('a');
         listItem.id = 'li-id-' + i;
+        listItem.hidden = hiddenValue;
         //anchorItem.setAttribute('href', "");
         anchorItem.innerHTML = arr[i];
         listItem.appendChild(anchorItem);
@@ -55,12 +58,15 @@ function populateStatementsAsUnorderedList(div, arr){
     }
 }
 
-function hideArrayAsUnorderedList(div) {
-    div.style.display = "none";
+function hideAllDivElements(div) {
+    for(var i = 0; i < div.childElementCount; i++){
+        div.childNodes[i].hidden = true;
+    }
 }
-function showArrayAsUnorderedList(div) {
-    div.style.display = ""
+function showSpecifiedDivElements(div, statementId) {
+    div.childNodes[statementId].hidden = false;
 }
+
 //TODO Maybe don't need array index vs length check.
 function populateReasoningStatementArray(statementArray, unformattedArgumentArray){
     var newList = [];
@@ -78,6 +84,7 @@ function populateReasoningStatementArray(statementArray, unformattedArgumentArra
     }
     return reasoningStatementList;
 }
+
 
 function isArgumentNotStatement(unformattedArgumentArray, argumentIndex, statementArray, i){
     return unformattedArgumentArray[argumentIndex] != statementArray[i]
