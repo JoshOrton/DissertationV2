@@ -14,17 +14,9 @@ var forStatements = populateReasoningStatementArray(statementArray, unformattedF
 
 populateStatementsAsUnorderedList(StatementListDiv, statementArray, false);
 
-populateStatementsAsUnorderedList(AgainstListDiv,againstStatements, true);
-populateStatementsAsUnorderedList(ForListDiv,forStatements,true);
+populateArgumentsAsUnorderedList(AgainstListDiv,againstStatements, true);
+populateArgumentsAsUnorderedList(ForListDiv,forStatements,true);
 
-//TODO generate statements for once clicked on statement.
-//populateStatementsAsUnorderedList(AgainstListDiv, againstStatements);
-//populateStatementsAsUnorderedList(ForListDiv, forStatements);
-
-console.log(statementArray.length);
-console.log(forStatements[4]);
-console.log(statementArray);
-console.log(againstStatements);
 
 $(StatementListDiv).click(function (event) {
     var statementId = event.target.parentNode.id.replace("li-id-","");
@@ -36,7 +28,7 @@ $(StatementListDiv).click(function (event) {
 
 });
 
-//More like populate really.
+//TODO Worth just putting this in HTML, probs not actually.
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
@@ -48,6 +40,35 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue){
         listItem.appendChild(anchorItem);
         div.appendChild(listItem);
     }
+}
+
+//TODO Another For loop for corresponding arrays within Statements.
+function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
+    for (var i = 0; i < arr.length; i++) {
+        var listItem = document.createElement('li');
+        listItem.id = 'li-id-' + i;
+        listItem.hidden = hiddenValue;
+        for(var j = 0; j < arr[i].length; j++){
+            listItem.appendChild(populateArgumentStatements(i,j,arr));
+            listItem.appendChild(populateButtonsForArguments(div.id));
+        }
+        div.appendChild(listItem);
+    }
+}
+function populateArgumentStatements(i ,j, arr) {
+    var textItem = document.createElement('p');
+    textItem.id = 'pArguments';
+    textItem.innerHTML = arr[i][j];
+    return textItem;
+}
+
+function populateButtonsForArguments(divName) {
+    var buttonStatement = document.createElement('button');
+    var buttonId = "btn" + divName;
+    buttonStatement.type = "button";
+    buttonStatement.textContent = "Like / NO";
+    buttonStatement.setAttribute("id", buttonId);
+    return buttonStatement;
 }
 
 function hideAllDivElements(div) {
