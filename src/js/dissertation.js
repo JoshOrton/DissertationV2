@@ -28,6 +28,32 @@ $(StatementListDiv).click(function (event) {
 
 });
 
+$(ForListDiv).click(function (event) {
+    var eventId = event.target.id.replace("pArguments-", "");
+    var parentEventId = event.target.parentNode.id;
+    parentEventId = parentEventId.substr(parentEventId.length-1);
+    var btnElement = "btnFor-li-id-" + parentEventId + "-pArguments-" + eventId;
+    var btnForListDiv = document.getElementById(btnElement);
+    if(btnForListDiv.hidden === false) hideDiv(btnForListDiv);
+    else showDiv(btnForListDiv,eventId);
+
+});
+
+$(AgainstListDiv).click(function (event) {
+    var eventId = event.target.id.replace("pArguments-", "");
+    var btnElement = "btnAgainstListOL-" + eventId;
+    var btnAgainstListDiv = document.getElementById(btnElement);
+    if(btnAgainstListDiv.hidden === false) hideDiv(btnAgainstListDiv);
+    else showDiv(btnAgainstListDiv, eventId);
+});
+
+function showDiv(div) {
+    div.hidden = false;
+}
+function hideDiv(div) {
+    div.hidden = true
+}
+
 //TODO Worth just putting this in HTML, probs not actually.
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
@@ -42,32 +68,51 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     }
 }
 
-//TODO Another For loop for corresponding arrays within Statements.
 function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
+    //Do not need one for isAgaisntArguments, as by definition if it is not for this then must be agaisnt.
+    //! converts from non boolean to Boolean
+    // ! then inverts it.
+    var isForArguments = !div.id.match("AgainstListOL");
+
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
-        listItem.id = 'li-id-' + i;
+        listItem.setAttribute("forArgument", isForArguments);
+        listItem.id = getlistItemId(listItem,i);
         listItem.hidden = hiddenValue;
         for(var j = 0; j < arr[i].length; j++){
             listItem.appendChild(populateArgumentStatements(i,j,arr));
-            listItem.appendChild(populateButtonsForArguments(div.id));
+            listItem.appendChild(populateButtonsForArguments(listItem.id, hiddenValue, j));
         }
         div.appendChild(listItem);
     }
 }
+function getlistItemId(listItem,i) {
+    if (listItem.getAttribute("forArgument") === "true") {
+        return 'For-li-id-'+i;
+    } else {
+       return 'Against-li-id-'+i;
+    }
+
+
+}
+
 function populateArgumentStatements(i ,j, arr) {
     var textItem = document.createElement('p');
-    textItem.id = 'pArguments';
+    textItem.id = 'pArguments-' + j;
+    textItem.className = "pArgumentStyle";
     textItem.innerHTML = arr[i][j];
     return textItem;
 }
 
-function populateButtonsForArguments(divName) {
+function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonStatement = document.createElement('button');
-    var buttonId = "btn" + divName;
+    var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
+    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     buttonStatement.type = "button";
+    buttonStatement.hidden = hiddenValue;
     buttonStatement.textContent = "Like / NO";
-    buttonStatement.setAttribute("id", buttonId);
+    buttonStatement.id = buttonId;
+    buttonStatement.className = buttonClass;
     return buttonStatement;
 }
 

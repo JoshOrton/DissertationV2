@@ -261,11 +261,9 @@ border: solid black;
 
 }
 
-p#pArguments{
+.pArgumentStyle{
     margin-bottom: 0.125rem;
-
 }
-
 
 button{
     transition-duration: 0.3s;
@@ -276,8 +274,8 @@ button:hover{
     opacity: 1.0;
 }
 
-button#btnForListOL{
-    background-color: #ff0000;
+.btnFor-li-id{
+    background-color: #ffc107;
 }
 button#btnAgainstListOL{
     background-color: green;
