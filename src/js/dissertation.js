@@ -43,9 +43,10 @@ function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
     var btnElement = "btn" + parentEventId + "-" + eventId;
-    var btnAgainstListDiv = document.getElementById(btnElement);
-    if(btnAgainstListDiv.hidden === false) hideDiv(btnAgainstListDiv);
-    else showDiv(btnAgainstListDiv, eventId);
+    var btnDiv = document.getElementById(btnElement);
+
+    if(btnDiv.hidden === false) hideDiv(btnDiv);
+    else showDiv(btnDiv, eventId);
 }
 
 function showDiv(div) {
