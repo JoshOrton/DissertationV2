@@ -23,29 +23,30 @@ $(StatementListDiv).click(function (event) {
     hideAllDivElements(ForListDiv);
     hideAllDivElements(AgainstListDiv);
 
-    showSpecifiedDivElements(ForListDiv, statementId);
-    showSpecifiedDivElements(AgainstListDiv, statementId);
+    showDivChildNodes(ForListDiv, statementId);
+    showDivChildNodes(AgainstListDiv, statementId);
 
 });
 
 $(ForListDiv).click(function (event) {
-    var eventId = event.target.id.replace("pArguments-", "");
-    var parentEventId = event.target.parentNode.id;
-    parentEventId = parentEventId.substr(parentEventId.length-1);
-    var btnElement = "btnFor-li-id-" + parentEventId + "-pArguments-" + eventId;
-    var btnForListDiv = document.getElementById(btnElement);
-    if(btnForListDiv.hidden === false) hideDiv(btnForListDiv);
-    else showDiv(btnForListDiv,eventId);
-
+    //TODO Formats are not probably as nice, but change when crossing this brige.
+    var eventName = event.target.id.slice(0,event.target.id.length-2);
+    if(eventName === "pArguments") paragraphToggleHandler(event);
 });
 
 $(AgainstListDiv).click(function (event) {
-    var eventId = event.target.id.replace("pArguments-", "");
-    var btnElement = "btnAgainstListOL-" + eventId;
+    var eventName = event.target.id.slice(0,event.target.id.length-2);
+    if(eventName === "pArguments") paragraphToggleHandler(event);
+});
+
+function paragraphToggleHandler(event) {
+    var eventId = event.target.id;
+    var parentEventId = event.target.parentNode.id;
+    var btnElement = "btn" + parentEventId + "-" + eventId;
     var btnAgainstListDiv = document.getElementById(btnElement);
     if(btnAgainstListDiv.hidden === false) hideDiv(btnAgainstListDiv);
     else showDiv(btnAgainstListDiv, eventId);
-});
+}
 
 function showDiv(div) {
     div.hidden = false;
@@ -121,7 +122,7 @@ function hideAllDivElements(div) {
         div.childNodes[i].hidden = true;
     }
 }
-function showSpecifiedDivElements(div, statementId) {
+function showDivChildNodes(div, statementId) {
     div.childNodes[statementId].hidden = false;
 }
 
