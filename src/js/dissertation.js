@@ -5,9 +5,24 @@ var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
 
 //TODO Perhaps grab this dynamically using AJAX request to Java backend
-var statementArray = ['Brexit is shite', 'Immigration is horrible', 'Down with the Queen', 'There should be no encrpytion', 'Kill all humans', 'Kill all animals'];
-var unformattedForArguments = ['Brexit is shite', 'Agree as means we can make our own rules', 'This can be broken if statement matches argument', 'Immigration is horrible', '-1 Disagree ', 'Down with the Queen', 'Id would not kill her dogs too', 'There should be no encrpytion', 'Edward Snowden is not a traitor', 'Kill all humans', 'Very extreme', 'Kill all animals', '-1 Animals are gorgeous'];
-var unformattedAgainstArguments = ['Brexit is shite', 'Disagree as means we can make our own rules', 'This can be broken if statement matches argument', 'Immigration is horrible', '+ 1 agree ', 'Down with the Queen', 'Id kill her dogs too', 'There should be no encrpytion', 'Edward Snowden is a traitor', 'Kill all humans', 'Bit extreme but would save the planet', 'Kill all animals', '+1 taking up all humans space'];
+var statementArray = ['Brexit is a bad idea',
+    'Immigration is ruining our culture',
+    'I am so proud of our queen',
+    'There should be no privacy, if it means catching terrorists',
+    'Global warming is our fault',
+    'I should be able to eat whatever animal I want.'];
+var unformattedForArguments = ['Brexit is a bad idea', 'Agree as it means leaving the single market', 'It could cost our economy loads',
+    'Immigration is ruining our culture', '+1 Agree I cant go down my high street without seeing an immigrant',
+    'I am so proud of our queen', 'Shes done our country the world of good.',
+    'There should be no privacy, if it means catching terrorists', 'Agree catch those damn terrorists, if you have nothing to fear you have nothing to hide',
+    'Global warming is our fault', 'Totally agree we should monitor how much we use.',
+    'I should be able to eat whatever animal I want.', 'We are the top of the food chain, therefore I can eat Rhino if I want to.'];
+var unformattedAgainstArguments = ['Brexit is a bad idea', 'Disagree as means we can make our own rules', 'Also results in uncontrolled immigration',
+    'Immigration is ruining our culture', 'Immigration brings loads of new culture that expands our world view.',
+    'I am so proud of our queen',  'I disagree with the monarchy regardless',
+    'There should be no privacy, if it means catching terrorists', 'Privacy is our right, it should not be thrown away',
+    'Global warming is our fault', 'Rubbish, scientists just trying to earn a big grant',
+    'I should be able to eat whatever animal I want.', 'Horrible, we share this planet with them, we are no more important than them.'];
 
 var againstStatements = populateReasoningStatementArray(statementArray, unformattedAgainstArguments);
 var forStatements = populateReasoningStatementArray(statementArray, unformattedForArguments);
@@ -112,7 +127,7 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     buttonStatement.type = "button";
     buttonStatement.hidden = hiddenValue;
-    buttonStatement.textContent = "Like / NO";
+    buttonStatement.textContent = "Like";
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
     return buttonStatement;
