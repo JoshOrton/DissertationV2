@@ -1,3 +1,9 @@
+//TODO Add submit and comments buttons.
+//TODO Add like functionality.
+//TODO Add Twitter API somehow.
+//TODO Like, respectability, relevance sliders.
+
+
 
 //TODO CSS change ordered columns.
 var ForListDiv = document.getElementById('ForListOL');
@@ -53,15 +59,32 @@ $(AgainstListDiv).click(function (event) {
     var eventName = event.target.id.slice(0,event.target.id.length-2);
     if(eventName === "pArguments") paragraphToggleHandler(event);
 });
-
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
     var btnElement = "btn" + parentEventId + "-" + eventId;
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
+    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
+    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
     var btnDiv = document.getElementById(btnElement);
+    var respectSliderDiv = document.getElementById(respectSliderElement);
+    var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var textAreaDiv = document.getElementById(textAreaElement);
+
+
 
     if(btnDiv.hidden === false) hideDiv(btnDiv);
     else showDiv(btnDiv, eventId);
+
+    if(respectSliderDiv.hidden === false) hideDiv(respectSliderDiv);
+    else showDiv(respectSliderDiv);
+
+    if(relevancySliderDiv.hidden === false) hideDiv(relevancySliderDiv);
+    else showDiv(relevancySliderDiv);
+
+
+    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
+    else showDiv(textAreaDiv);
 }
 
 function showDiv(div) {
@@ -75,10 +98,9 @@ function hideDiv(div) {
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
-        var anchorItem = document.createElement('a');
+        var anchorItem = document.createElement('p');
         listItem.id = 'li-id-' + i;
         listItem.hidden = hiddenValue;
-        //anchorItem.setAttribute('href', "");
         anchorItem.innerHTML = arr[i];
         listItem.appendChild(anchorItem);
         div.appendChild(listItem);
@@ -93,12 +115,16 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
 
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
-        listItem.setAttribute("forArgument", isForArguments);
+        listItem.setAttribute("forArgument", isForArguments.toString());
         listItem.id = getlistItemId(listItem,i);
         listItem.hidden = hiddenValue;
         for(var j = 0; j < arr[i].length; j++){
             listItem.appendChild(populateArgumentStatements(i,j,arr));
             listItem.appendChild(populateButtonsForArguments(listItem.id, hiddenValue, j));
+            listItem.appendChild(populateSliderForArguments("respect" , listItem.id, hiddenValue, j));
+            listItem.appendChild(populateSliderForArguments("relevancy", listItem.id, hiddenValue, j));
+            listItem.appendChild(populateTextAreaForArguments(listItem.id, hiddenValue, j));
+            listItem.appendChild(populateSubmitTextAreaForArguments(listItem.id, hiddenValue, j));
         }
         div.appendChild(listItem);
     }
@@ -123,16 +149,59 @@ function populateArgumentStatements(i ,j, arr) {
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonStatement = document.createElement('button');
+    var imgSrc = document.createElement('img');
+    imgSrc.src = 'https://cdn2.iconfinder.com/data/icons/facebook-ui-colored/48/JD-22-32.png';
+    imgSrc.className = 'likeButtonImg';
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     buttonStatement.type = "button";
     buttonStatement.hidden = hiddenValue;
-    buttonStatement.textContent = "Like";
+    //buttonStatement.textContent = "Like";
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
+    buttonStatement.appendChild(imgSrc);
     return buttonStatement;
 }
 
+function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
+    var sliderElement = document.createElement('input');
+    var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
+    var sliderClass =  currentNodeName + "slider" + parentNodeName.substr(0,parentNodeName.length-2);
+    sliderElement.type  ="range";
+    sliderElement.min = "1";
+    sliderElement.max = "100";
+    sliderElement.hidden = hiddenValue;
+    sliderElement.background = "http://www.freeclipart.pw/uploads/2017/05/thumbs-up-in-blue-clip-art-at-clker--vector-clip-art-online--12.png";
+    sliderElement.value = "50";
+    sliderElement.className = sliderClass;
+    sliderElement.id = sliderId;
+
+    return sliderElement;
+}
+function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
+    var textAreaElement = document.createElement("textarea");
+    var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
+    var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
+    textAreaElement.name = "comment";
+    textAreaElement.rows = "4";
+    textAreaElement.cols = "30";
+    textAreaElement.id = textAreaId;
+    textAreaElement.className = textAreaClass;
+    textAreaElement.hidden = hiddenValue;
+    textAreaElement.innerHTML = "Enter reply here...";
+
+    return textAreaElement;
+}
+function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
+    var textAreaSubmit = document.createElement("input");
+    var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments" + j;
+    var textAreaSubmitClass = "submitTextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
+    textAreaSubmit.type = "submit";
+    textAreaSubmit.hidden = hiddenValue;
+    textAreaSubmit.id = textAreaSubmitId;
+    textAreaSubmit.className = textAreaSubmitClass;
+    return textAreaSubmit;
+}
 function hideAllDivElements(div) {
     for(var i = 0; i < div.childElementCount; i++){
         div.childNodes[i].hidden = true;
