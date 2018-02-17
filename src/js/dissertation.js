@@ -1,8 +1,6 @@
 //TODO Add submit and comments buttons.
 //TODO Add like functionality.
 //TODO Add Twitter API somehow.
-//TODO Like, respectability, relevance sliders.
-
 
 
 //TODO CSS change ordered columns.
@@ -41,8 +39,8 @@ populateArgumentsAsUnorderedList(ForListDiv,forStatements,true);
 
 $(StatementListDiv).click(function (event) {
     var statementId = event.target.parentNode.id.replace("li-id-","");
-    hideAllDivElements(ForListDiv);
-    hideAllDivElements(AgainstListDiv);
+    hideAllChildNodes(ForListDiv);
+    hideAllChildNodes(AgainstListDiv);
 
     showDivChildNodes(ForListDiv, statementId);
     showDivChildNodes(AgainstListDiv, statementId);
@@ -66,11 +64,13 @@ function paragraphToggleHandler(event) {
     var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
     var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
     var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
+    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+
     var btnDiv = document.getElementById(btnElement);
     var respectSliderDiv = document.getElementById(respectSliderElement);
     var relevancySliderDiv = document.getElementById(relevancySliderElement);
     var textAreaDiv = document.getElementById(textAreaElement);
-
+    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
 
 
     if(btnDiv.hidden === false) hideDiv(btnDiv);
@@ -82,9 +82,12 @@ function paragraphToggleHandler(event) {
     if(relevancySliderDiv.hidden === false) hideDiv(relevancySliderDiv);
     else showDiv(relevancySliderDiv);
 
-
     if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
     else showDiv(textAreaDiv);
+
+    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
+    else showDiv(submitTextAreaDiv);
+
 }
 
 function showDiv(div) {
@@ -125,6 +128,7 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
             listItem.appendChild(populateSliderForArguments("relevancy", listItem.id, hiddenValue, j));
             listItem.appendChild(populateTextAreaForArguments(listItem.id, hiddenValue, j));
             listItem.appendChild(populateSubmitTextAreaForArguments(listItem.id, hiddenValue, j));
+            //TODO Add source submit text and css.
         }
         div.appendChild(listItem);
     }
@@ -178,6 +182,8 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
 
     return sliderElement;
 }
+
+//TODO Fix coloumn size, smaller box and submit button closer.
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaElement = document.createElement("textarea");
     var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
@@ -194,7 +200,7 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
 }
 function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaSubmit = document.createElement("input");
-    var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments" + j;
+    var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments-" + j;
     var textAreaSubmitClass = "submitTextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
     textAreaSubmit.type = "submit";
     textAreaSubmit.hidden = hiddenValue;
@@ -202,7 +208,7 @@ function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaSubmit.className = textAreaSubmitClass;
     return textAreaSubmit;
 }
-function hideAllDivElements(div) {
+function hideAllChildNodes(div) {
     for(var i = 0; i < div.childElementCount; i++){
         div.childNodes[i].hidden = true;
     }
