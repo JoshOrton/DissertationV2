@@ -8,7 +8,7 @@ var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
 
-//TODO Perhaps grab this dynamically using AJAX request to Java backend
+//TODO Perhaps grab this dynamically using AJAX request to Java backend, or through Twitter API?
 var statementArray = ['Brexit is a bad idea',
     'Immigration is ruining our culture',
     'I am so proud of our queen',
@@ -41,11 +41,16 @@ $(StatementListDiv).click(function (event) {
     var statementId = event.target.parentNode.id.replace("li-id-","");
     hideAllChildNodes(ForListDiv);
     hideAllChildNodes(AgainstListDiv);
+    deBoldAllChildNodes(StatementListDiv);
 
-    showDivChildNodes(ForListDiv, statementId);
-    showDivChildNodes(AgainstListDiv, statementId);
+    showDivChildNode(ForListDiv, statementId);
+    showDivChildNode(AgainstListDiv, statementId);
+
+    emboldenEvent(event);
 
 });
+
+
 
 $(ForListDiv).click(function (event) {
     //TODO Formats are not probably as nice, but change when crossing this brige.
@@ -57,6 +62,7 @@ $(AgainstListDiv).click(function (event) {
     var eventName = event.target.id.slice(0,event.target.id.length-2);
     if(eventName === "pArguments") paragraphToggleHandler(event);
 });
+
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
@@ -101,11 +107,12 @@ function hideDiv(div) {
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
-        var anchorItem = document.createElement('p');
+        var paragraphItem = document.createElement('p');
         listItem.id = 'li-id-' + i;
         listItem.hidden = hiddenValue;
-        anchorItem.innerHTML = arr[i];
-        listItem.appendChild(anchorItem);
+        paragraphItem.innerHTML = arr[i];
+        paragraphItem.id = "p-" + i;
+        listItem.appendChild(paragraphItem);
         div.appendChild(listItem);
     }
 }
@@ -168,9 +175,15 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
 }
 
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
+    var wrapper = document.createElement('div');
+    wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
+    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
+
+
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
     var sliderClass =  currentNodeName + "slider" + parentNodeName.substr(0,parentNodeName.length-2);
+
     sliderElement.type  ="range";
     sliderElement.min = "1";
     sliderElement.max = "100";
@@ -179,8 +192,31 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     sliderElement.value = "50";
     sliderElement.className = sliderClass;
     sliderElement.id = sliderId;
+    sliderElement.addEventListener("change", sliderChange);
 
-    return sliderElement;
+
+    wrapper.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j));
+    wrapper.appendChild(sliderElement);
+    return wrapper;
+}
+
+function sliderChange(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.parentNode.childNodes[0].innerHTML = sliderElement.value;
+}
+
+function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j){
+    var sliderElementValue = document.createElement('p');
+    var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
+    var sliderValueClass =  currentNodeName + "slidervalue" + parentNodeName.substr(0,parentNodeName.length-2);
+
+    sliderElement.innerHTML = sliderElement.value;
+    sliderElementValue.value = sliderElement.value;
+    sliderElementValue.id = sliderValueId;
+    sliderElementValue.className = sliderValueClass;
+
+    return sliderElementValue;
 }
 
 //TODO Fix coloumn size, smaller box and submit button closer.
@@ -213,8 +249,19 @@ function hideAllChildNodes(div) {
         div.childNodes[i].hidden = true;
     }
 }
-function showDivChildNodes(div, statementId) {
+function showDivChildNode(div, statementId) {
     div.childNodes[statementId].hidden = false;
+}
+
+
+function emboldenEvent(event){
+    event.target.style.fontWeight = "bold";
+}
+function deBoldAllChildNodes(StatementListDiv) {
+    for(var i = 0; i < StatementListDiv.childElementCount; i++){
+        StatementListDiv.childNodes[i].childNodes[0].style.fontWeight ="";
+    }
+
 }
 
 //TODO Maybe don't need array index vs length check.
