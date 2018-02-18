@@ -32,7 +32,7 @@
 
 
 .relevancySliderValueFor-li-id{
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s;
     margin-right: 13%;
     margin-left: 13%;
@@ -41,7 +41,7 @@
 }
 
 .relevancySliderValueAgainst-li-id{
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s;
     margin-right: 13%;
     margin-left: 13%;
