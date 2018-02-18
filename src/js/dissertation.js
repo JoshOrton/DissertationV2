@@ -275,7 +275,16 @@ function handleTextAreaClear(event) {
     if(textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
 }
 function handleSubmitTextArea(event) {
-    
+    var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
+    if(textAreaElement.innerHTML!==""){
+        textAreaElement.innerHTML = "";
+        console.log("AddComments and populate text");
+        var relatedArgumentValue = "";
+        var relatedDiv = event.target.parentNode.classList[0];
+        relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
+        console.log(relatedArgumentValue);
+
+    }
 }
 //TODO Reduce this massively!!
 function paragraphToggleHandler(event) {

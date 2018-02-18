@@ -7,4 +7,13 @@
     display: inline-block;
     position: center;
 
+}.TextAreaFor-li-id{
+    display: inline-block;
+    width: 70%;
+    height: 2rem;
+}
+.submitTextAreaFor-li-id{
+    display: inline-block;
+    position: center;
+
 }
