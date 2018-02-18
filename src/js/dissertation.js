@@ -37,70 +37,22 @@ populateArgumentsAsUnorderedList(AgainstListDiv,againstStatements, true);
 populateArgumentsAsUnorderedList(ForListDiv,forStatements,true);
 
 
-$(StatementListDiv).click(function (event) {
-    var statementId = event.target.parentNode.id.replace("li-id-","");
-    hideAllChildNodes(ForListDiv);
-    hideAllChildNodes(AgainstListDiv);
-    deBoldAllChildNodes(StatementListDiv);
-
-    showDivChildNode(ForListDiv, statementId);
-    showDivChildNode(AgainstListDiv, statementId);
-
-    emboldenEvent(event);
-
-});
-
-
-
-$(ForListDiv).click(function (event) {
-    //TODO Formats are not probably as nice, but change when crossing this brige.
-    var eventName = event.target.id.slice(0,event.target.id.length-2);
-    if(eventName === "pArguments") paragraphToggleHandler(event);
-});
-
-$(AgainstListDiv).click(function (event) {
-    var eventName = event.target.id.slice(0,event.target.id.length-2);
-    if(eventName === "pArguments") paragraphToggleHandler(event);
-});
-
-function paragraphToggleHandler(event) {
-    var eventId = event.target.id;
-    var parentEventId = event.target.parentNode.id;
-    var btnElement = "btn" + parentEventId + "-" + eventId;
-    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
-    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
-    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
-    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
-
-    var btnDiv = document.getElementById(btnElement);
-    var respectSliderDiv = document.getElementById(respectSliderElement);
-    var relevancySliderDiv = document.getElementById(relevancySliderElement);
-    var textAreaDiv = document.getElementById(textAreaElement);
-    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
-
-
-    if(btnDiv.hidden === false) hideDiv(btnDiv);
-    else showDiv(btnDiv, eventId);
-
-    if(respectSliderDiv.hidden === false) hideDiv(respectSliderDiv);
-    else showDiv(respectSliderDiv);
-
-    if(relevancySliderDiv.hidden === false) hideDiv(relevancySliderDiv);
-    else showDiv(relevancySliderDiv);
-
-    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
-    else showDiv(textAreaDiv);
-
-    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
-    else showDiv(submitTextAreaDiv);
-
-}
-
-function showDiv(div) {
-    div.hidden = false;
-}
-function hideDiv(div) {
-    div.hidden = true
+//TODO Maybe don't need array index vs length check.
+function populateReasoningStatementArray(statementArray, unformattedArgumentArray){
+    var newList = [];
+    var reasoningStatementList = [];
+    var argumentIndex = 0;
+    for (var i = 0; i < statementArray.length; i++) {
+        do {
+            if(isArgumentNotStatement(unformattedArgumentArray,argumentIndex,statementArray,i)) {
+                newList = newList.concat(unformattedArgumentArray[argumentIndex]);
+            }
+            argumentIndex = argumentIndex + 1;
+        } while((isArgumentForCurrentStatement(unformattedArgumentArray,argumentIndex,statementArray,i)) && argumentIndexInBounds(argumentIndex,unformattedArgumentArray));
+        reasoningStatementList.push(newList);
+        newList = [];
+    }
+    return reasoningStatementList;
 }
 
 //TODO Worth just putting this in HTML, probs not actually.
@@ -140,6 +92,13 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
         div.appendChild(listItem);
     }
 }
+
+function showDiv(div) {
+    div.hidden = false;
+}
+function hideDiv(div) {
+    div.hidden = true
+}
 function getlistItemId(listItem,i) {
     if (listItem.getAttribute("forArgument") === "true") {
         return 'For-li-id-'+i;
@@ -164,7 +123,6 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     buttonStatement.type = "button";
     buttonStatement.hidden = hiddenValue;
-    //buttonStatement.textContent = "Like";
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
     return buttonStatement;
@@ -189,9 +147,9 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     sliderElement.className = sliderClass;
     sliderElement.setAttribute("data-show-value","true");
     sliderElement.id = sliderId;
-    sliderElement.addEventListener("change", sliderChange);
-    sliderElement.addEventListener("mouseleave", sliderLeave);
-    sliderElement.addEventListener("mouseover", sliderHover)
+    sliderElement.addEventListener("change", handleSliderChange);
+    sliderElement.addEventListener("mouseleave", handleSliderLeave);
+    sliderElement.addEventListener("mouseover", handleSliderHover)
 
 
     sliderElement.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j));
@@ -199,26 +157,6 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     return sliderElement;
 }
 
-function sliderChange(event) {
-    console.log(event.target.id);
-    var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
-
-}function sliderHover(event) {
-    console.log(event.target.id);
-    var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
-
-}
-function sliderLeave(event) {
-    console.log(event.target.id);
-    var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id";
-
-}
 
 function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j){
     var sliderElementValue = document.createElement('span');
@@ -243,6 +181,8 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaElement.className = textAreaClass;
     textAreaElement.hidden = hiddenValue;
     textAreaElement.innerHTML = "Enter reply here...";
+    textAreaElement.addEventListener("click", handleTextAreaClear)
+
 
     return textAreaElement;
 }
@@ -256,6 +196,19 @@ function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaSubmit.className = textAreaSubmitClass;
     return textAreaSubmit;
 }
+
+
+
+function isArgumentNotStatement(unformattedArgumentArray, argumentIndex, statementArray, i){
+    return unformattedArgumentArray[argumentIndex] != statementArray[i]
+}
+function isArgumentForCurrentStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
+    return unformattedArgumentArray[argumentIndex] != statementArray[i+1];
+}
+function argumentIndexInBounds(argumentIndex, unformattedArgumentArray){
+    return argumentIndex < unformattedArgumentArray.length;
+}
+
 function hideAllChildNodes(div) {
     for(var i = 0; i < div.childElementCount; i++){
         div.childNodes[i].hidden = true;
@@ -276,32 +229,84 @@ function deBoldAllChildNodes(StatementListDiv) {
 
 }
 
-//TODO Maybe don't need array index vs length check.
-function populateReasoningStatementArray(statementArray, unformattedArgumentArray){
-    var newList = [];
-    var reasoningStatementList = [];
-    var argumentIndex = 0;
-    for (var i = 0; i < statementArray.length; i++) {
-        do {
-            if(isArgumentNotStatement(unformattedArgumentArray,argumentIndex,statementArray,i)) {
-                newList = newList.concat(unformattedArgumentArray[argumentIndex]);
-            }
-            argumentIndex = argumentIndex + 1;
-        } while((isArgumentForCurrentStatement(unformattedArgumentArray,argumentIndex,statementArray,i)) && argumentIndexInBounds(argumentIndex,unformattedArgumentArray));
-        reasoningStatementList.push(newList);
-        newList = [];
-    }
-    return reasoningStatementList;
+function handleSliderChange(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+
+}function handleSliderHover(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+
+}
+function handleSliderLeave(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id";
+
+}
+function handleTextAreaClear(event) {
+    var textAreaElement = document.getElementById(event.target.id);
+    if(textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
 }
 
+function paragraphToggleHandler(event) {
+    var eventId = event.target.id;
+    var parentEventId = event.target.parentNode.id;
+    var btnElement = "btn" + parentEventId + "-" + eventId;
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
+    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
+    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
+    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
 
-function isArgumentNotStatement(unformattedArgumentArray, argumentIndex, statementArray, i){
-    return unformattedArgumentArray[argumentIndex] != statementArray[i]
-}
-function isArgumentForCurrentStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
-    return unformattedArgumentArray[argumentIndex] != statementArray[i+1];
-}
-function argumentIndexInBounds(argumentIndex, unformattedArgumentArray){
-    return argumentIndex < unformattedArgumentArray.length;
+    var btnDiv = document.getElementById(btnElement);
+    var respectSliderDiv = document.getElementById(respectSliderElement);
+    var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var textAreaDiv = document.getElementById(textAreaElement);
+    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
+
+
+    if(btnDiv.hidden === false) hideDiv(btnDiv);
+    else showDiv(btnDiv, eventId);
+
+    if(respectSliderDiv.hidden === false) hideDiv(respectSliderDiv);
+    else showDiv(respectSliderDiv);
+
+    if(relevancySliderDiv.hidden === false) hideDiv(relevancySliderDiv);
+    else showDiv(relevancySliderDiv);
+
+    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
+    else showDiv(textAreaDiv);
+
+    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
+    else showDiv(submitTextAreaDiv);
+
 }
 
+$(StatementListDiv).click(function (event) {
+    var statementId = event.target.parentNode.id.replace("li-id-","");
+    hideAllChildNodes(ForListDiv);
+    hideAllChildNodes(AgainstListDiv);
+    deBoldAllChildNodes(StatementListDiv);
+
+    showDivChildNode(ForListDiv, statementId);
+    showDivChildNode(AgainstListDiv, statementId);
+
+    emboldenEvent(event);
+
+});
+
+$(ForListDiv).click(function (event) {
+    //TODO Formats are not probably as nice, but change when crossing this brige.
+    var eventName = event.target.id.slice(0,event.target.id.length-2);
+    if(eventName === "pArguments") paragraphToggleHandler(event);
+});
+
+$(AgainstListDiv).click(function (event) {
+    var eventName = event.target.id.slice(0,event.target.id.length-2);
+    if(eventName === "pArguments") paragraphToggleHandler(event);
+});
