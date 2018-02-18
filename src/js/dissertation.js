@@ -86,7 +86,6 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
             listItem.appendChild(populateSliderForArguments("respect" , listItem.id, hiddenValue, j));
             listItem.appendChild(populateSliderForArguments("relevancy", listItem.id, hiddenValue, j));
             listItem.appendChild(populateTextAreaForArguments(listItem.id, hiddenValue, j));
-            listItem.appendChild(populateSubmitTextAreaForArguments(listItem.id, hiddenValue, j));
             //TODO Add source submit text and css.
         }
         div.appendChild(listItem);
@@ -133,7 +132,14 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
     wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
 
+    wrapper.hidden = hiddenValue;
 
+    wrapper.appendChild(populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j));
+    wrapper.appendChild(populateSliderValueElement( currentNodeName, parentNodeName, j));
+
+    return wrapper;
+}
+function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
     var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-2);
@@ -143,38 +149,45 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     sliderElement.max = "100";
     sliderElement.hidden = hiddenValue;
     sliderElement.background = "http://www.freeclipart.pw/uploads/2017/05/thumbs-up-in-blue-clip-art-at-clker--vector-clip-art-online--12.png";
-    sliderElement.value = "50";
+    sliderElement.value = "50%";
     sliderElement.className = sliderClass;
     sliderElement.setAttribute("data-show-value","true");
     sliderElement.id = sliderId;
     sliderElement.addEventListener("change", handleSliderChange);
     sliderElement.addEventListener("mouseleave", handleSliderLeave);
-    sliderElement.addEventListener("mouseover", handleSliderHover)
+    sliderElement.addEventListener("mouseover", handleSliderHover);
 
-
-    wrapper.appendChild(sliderElement);
-    wrapper.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j, hiddenValue));
-
-    return wrapper;
+    return sliderElement;
+    
 }
 
 
-function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j, hiddenValue){
+function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenValue){
     var sliderElementValue = document.createElement('p');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
     var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
 
-    sliderElementValue.hidden = false;
-    sliderElementValue.value = sliderElement.value;
+    sliderElementValue.hidden = hiddenValue;
+    sliderElementValue.value = "50%";
     sliderElementValue.id = sliderValueId;
     sliderElementValue.className = sliderValueClass;
-    sliderElementValue.innerHTML = sliderElement.value;
+    sliderElementValue.innerHTML = sliderElementValue.value;
 
     return sliderElementValue;
 }
 
 //TODO Fix coloumn size, smaller box and submit button closer.
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
+    var textAreaWrapper = document.createElement("div");
+    textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
+    textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 2);"TextAreaWrapper";
+
+    textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
+    textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
+
+    return textAreaWrapper;
+}
+function populateTextAreaElement(parentNodeName, hiddenValue, j) {
     var textAreaElement = document.createElement("textarea");
     var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
     var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
@@ -183,11 +196,11 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaElement.className = textAreaClass;
     textAreaElement.hidden = hiddenValue;
     textAreaElement.innerHTML = "Enter reply here...";
-    textAreaElement.addEventListener("click", handleTextAreaClear)
-
+    textAreaElement.addEventListener("click", handleTextAreaClear);
 
     return textAreaElement;
 }
+
 function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaSubmit = document.createElement("input");
     var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments-" + j;
@@ -196,6 +209,8 @@ function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaSubmit.hidden = hiddenValue;
     textAreaSubmit.id = textAreaSubmitId;
     textAreaSubmit.className = textAreaSubmitClass;
+    textAreaSubmit.addEventListener("click", handleSubmitTextArea);
+
     return textAreaSubmit;
 }
 
@@ -262,7 +277,7 @@ function handleTextAreaClear(event) {
 function handleSubmitTextArea(event) {
     
 }
-
+//TODO Reduce this massively!!
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
@@ -271,10 +286,18 @@ function paragraphToggleHandler(event) {
     var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
     var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
     var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+    var respectSliderValueElement ="respectSliderValue" + parentEventId + "-" + eventId;
+    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
+    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
+    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
 
     var btnDiv = document.getElementById(btnElement);
     var respectSliderDiv = document.getElementById(respectSliderElement);
     var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
+    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
+    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
+    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
     var textAreaDiv = document.getElementById(textAreaElement);
     var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
 
@@ -282,11 +305,27 @@ function paragraphToggleHandler(event) {
     if(btnDiv.hidden === false) hideDiv(btnDiv);
     else showDiv(btnDiv, eventId);
 
-    if(respectSliderDiv.hidden === false) hideDiv(respectSliderDiv);
-    else showDiv(respectSliderDiv);
+    if(respectSliderDiv.hidden === false) {
+        hideDiv(respectSliderDiv);
+        hideDiv(respectSliderValueDiv);
+        hideDiv(respectSliderWrapperDiv);
+    }
+    else {
+        showDiv(respectSliderDiv);
+        showDiv(respectSliderValueDiv);
+        showDiv(respectSliderWrapperDiv);
+    }
 
-    if(relevancySliderDiv.hidden === false) hideDiv(relevancySliderDiv);
-    else showDiv(relevancySliderDiv);
+    if(relevancySliderDiv.hidden === false){
+        hideDiv(relevancySliderDiv);
+        hideDiv(relevancySliderValueDiv);
+        hideDiv(relevancySliderWrapperDiv);
+    }
+    else {
+        showDiv(relevancySliderDiv);
+        showDiv(relevancySliderValueDiv);
+        showDiv(relevancySliderWrapperDiv);
+    }
 
     if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
     else showDiv(textAreaDiv);
