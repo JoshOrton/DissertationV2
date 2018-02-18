@@ -129,11 +129,11 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
 }
 
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
-   /*var wrapper = document.createElement('div');
+   var wrapper = document.createElement('div');
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
-    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
+    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
 
-*/
+
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
     var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-2);
@@ -152,17 +152,19 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     sliderElement.addEventListener("mouseover", handleSliderHover)
 
 
-    sliderElement.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j));
+    wrapper.appendChild(sliderElement);
+    wrapper.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j, hiddenValue));
 
-    return sliderElement;
+    return wrapper;
 }
 
 
-function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j){
-    var sliderElementValue = document.createElement('span');
+function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j, hiddenValue){
+    var sliderElementValue = document.createElement('p');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
-    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-2);
+    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
 
+    sliderElementValue.hidden = false;
     sliderElementValue.value = sliderElement.value;
     sliderElementValue.id = sliderValueId;
     sliderElementValue.className = sliderValueClass;
@@ -232,26 +234,33 @@ function deBoldAllChildNodes(StatementListDiv) {
 function handleSliderChange(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+    //sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
+    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
+    sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
+    sliderElement.parentNode.childNodes[1].hidden = false;
 
 }function handleSliderHover(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+    sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
+    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
+    sliderElement.parentNode.childNodes[1].hidden = false;
 
 }
 function handleSliderLeave(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
-    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id";
+    sliderElement.parentNode.childNodes[1].innerHTML =  sliderElement.value + "%";
+    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id override";
+    sliderElement.parentNode.childNodes[1].hidden = false;
 
 }
 function handleTextAreaClear(event) {
     var textAreaElement = document.getElementById(event.target.id);
     if(textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
+}
+function handleSubmitTextArea(event) {
+    
 }
 
 function paragraphToggleHandler(event) {
