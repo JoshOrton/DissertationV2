@@ -1,9 +1,19 @@
+/*TODO Leave this until after demo*/
+.override{
+    display: inline-block;
+    margin-top: 0rem;
+    margin-bottom: 0rem;
+    margin-right: 0.5rem;
+}
 
+.respectSliderWrapperAgainst-li-id{
+    display: inline-block;
+
+}
 .respectSliderFor-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 30%;
-    margin-right: 2%;
+    width: 33%;
     height: 1.25rem;
     border-radius: 5px;
     background: white;
@@ -15,10 +25,8 @@
 .respectSliderAgainst-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 30%;
-    margin-right: 2%;
+    width: 6rem;
     height: 1.25rem;
-    border-radius: 5px;
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
@@ -29,39 +37,40 @@
 
 
 .respectSliderValueFor-li-id{
+    display: inline-block;
     opacity: 0;
     transition: opacity 0.3s;
-    margin-right: 13%;
-    margin-left: 13%;
 
     color: #0069d9;
 }
 
 
 .respectSliderValueAgainst-li-id{
-    opacity: 0;
-    transition: opacity 0.3s;
-    margin-right: 13%;
-    margin-left: 13%;
-
-    color: #0069d9;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
+    -webkit-appearance: none;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
 
 
 
 
 .respectSliderValueFor-li-id:Hover{
+    display: inline-block;
     visibility: visible;
     opacity: 1;
+
 }
+
 .respectSliderValueAgainst-li-id:Hover{
+    display: inline-block;
     visibility: visible;
     opacity: 1;
+
 }
-
-
-
-
 
 .respectSliderFor-li-id::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -74,7 +83,7 @@
 }
 
 .respectSliderFor-li-id::-moz-range-thumb {
-    width: 30%;
+    width: 33%;
     height: 1.25rem;
     border: 0;
     background: url('fistbump.png') no-repeat;
@@ -86,7 +95,7 @@
 .respectSliderAgainst-li-id::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 30%;
+    width: 33%;
     height: 1.25rem;
     border: 0;
     background: url('fistbump.png') no-repeat;
@@ -94,7 +103,7 @@
 }
 
 .respectSliderAgainst-li-id::-moz-range-thumb {
-    width: 30%;
+    width: 33%;
     height: 1.25rem;
     border: 0;
     background: url('fistbump.png') no-repeat;

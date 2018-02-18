@@ -1,13 +1,20 @@
+.override{
+    display: inline-block;
+}
+
+.respectSliderWrapperAgainst-li-id{
+    display: inline-block;
+}
+
 
 .relevancySliderFor-li-id{
+    display: inline-block;
     -webkit-appearance: none;
-    width: 30%;
-    margin-right: 2%;
+    width: 6rem;
     height: 1.25rem;
-    border-radius: 5px;
-    background: white;
+    background: #d3d3d3;
     outline: none;
-
+    opacity: 0.7;
     -webkit-transition: .2s;
     transition: opacity .2s;
 }
@@ -17,13 +24,11 @@
 .relevancySliderAgainst-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 30%;
-    margin-right: 2%;
+    width: 6rem;
     height: 1.25rem;
     border-radius: 5px;
     background: #d3d3d3;
     outline: none;
-
     -webkit-transition: .2s;
     transition: opacity .2s;
 }
@@ -32,6 +37,7 @@
 
 
 .relevancySliderValueFor-li-id{
+    display: inline-block;
     opacity: 1;
     transition: opacity 0.3s;
     margin-right: 13%;
@@ -41,10 +47,10 @@
 }
 
 .relevancySliderValueAgainst-li-id{
+    display: inline-block;
     opacity: 1;
     transition: opacity 0.3s;
-    margin-right: 13%;
-    margin-left: 13%;
+
 
     color: #0069d9;
 }
