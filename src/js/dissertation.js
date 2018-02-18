@@ -160,9 +160,6 @@ function populateArgumentStatements(i ,j, arr) {
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonStatement = document.createElement('button');
-    var imgSrc = document.createElement('img');
-    imgSrc.src = 'https://cdn2.iconfinder.com/data/icons/facebook-ui-colored/48/JD-22-32.png';
-    imgSrc.className = 'likeButtonImg';
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     buttonStatement.type = "button";
@@ -170,19 +167,18 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     //buttonStatement.textContent = "Like";
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
-    buttonStatement.appendChild(imgSrc);
     return buttonStatement;
 }
 
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
-    var wrapper = document.createElement('div');
+   /*var wrapper = document.createElement('div');
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
     wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
 
-
+*/
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
-    var sliderClass =  currentNodeName + "slider" + parentNodeName.substr(0,parentNodeName.length-2);
+    var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-2);
 
     sliderElement.type  ="range";
     sliderElement.min = "1";
@@ -191,30 +187,48 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
     sliderElement.background = "http://www.freeclipart.pw/uploads/2017/05/thumbs-up-in-blue-clip-art-at-clker--vector-clip-art-online--12.png";
     sliderElement.value = "50";
     sliderElement.className = sliderClass;
+    sliderElement.setAttribute("data-show-value","true");
     sliderElement.id = sliderId;
     sliderElement.addEventListener("change", sliderChange);
+    sliderElement.addEventListener("mouseleave", sliderLeave);
+    sliderElement.addEventListener("mouseover", sliderHover)
 
 
-    wrapper.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j));
-    wrapper.appendChild(sliderElement);
-    return wrapper;
+    sliderElement.appendChild(populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j));
+
+    return sliderElement;
 }
 
 function sliderChange(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.parentNode.childNodes[0].innerHTML = sliderElement.value;
+    sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+
+}function sliderHover(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id:Hover";
+
+}
+function sliderLeave(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    sliderElement.childNodes[0].innerHTML = "Hover " + sliderElement.value;
+    sliderElement.childNodes[0].className = "respectSliderValueAgainst-li-id";
+
 }
 
 function populateSliderValueElement(sliderElement, currentNodeName, parentNodeName, j){
-    var sliderElementValue = document.createElement('p');
+    var sliderElementValue = document.createElement('span');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
-    var sliderValueClass =  currentNodeName + "slidervalue" + parentNodeName.substr(0,parentNodeName.length-2);
+    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-2);
 
-    sliderElement.innerHTML = sliderElement.value;
     sliderElementValue.value = sliderElement.value;
     sliderElementValue.id = sliderValueId;
     sliderElementValue.className = sliderValueClass;
+    sliderElementValue.innerHTML = sliderElement.value;
 
     return sliderElementValue;
 }
@@ -225,8 +239,6 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
     var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
     textAreaElement.name = "comment";
-    textAreaElement.rows = "4";
-    textAreaElement.cols = "30";
     textAreaElement.id = textAreaId;
     textAreaElement.className = textAreaClass;
     textAreaElement.hidden = hiddenValue;

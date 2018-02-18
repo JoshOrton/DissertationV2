@@ -1,0 +1,102 @@
+
+.respectSliderFor-li-id{
+    display: inline-block;
+    -webkit-appearance: none;
+    width: 30%;
+    margin-right: 2%;
+    height: 1.25rem;
+    border-radius: 5px;
+    background: white;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.respectSliderAgainst-li-id{
+    display: inline-block;
+    -webkit-appearance: none;
+    width: 30%;
+    margin-right: 2%;
+    height: 1.25rem;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+
+
+.respectSliderValueFor-li-id{
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-right: 13%;
+    margin-left: 13%;
+
+    color: #0069d9;
+}
+
+
+.respectSliderValueAgainst-li-id{
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-right: 13%;
+    margin-left: 13%;
+
+    color: #0069d9;
+}
+
+
+
+
+.respectSliderValueFor-li-id:Hover{
+    visibility: visible;
+    opacity: 1;
+}
+.respectSliderValueAgainst-li-id:Hover{
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+
+
+.respectSliderFor-li-id::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30%;
+    height: 1.25rem;
+    border: 0;
+    background: url('fistbump.png') no-repeat;
+    cursor: pointer;
+}
+
+.respectSliderFor-li-id::-moz-range-thumb {
+    width: 30%;
+    height: 1.25rem;
+    border: 0;
+    background: url('fistbump.png') no-repeat;
+    cursor: pointer;
+}
+
+
+
+.respectSliderAgainst-li-id::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30%;
+    height: 1.25rem;
+    border: 0;
+    background: url('fistbump.png') no-repeat;
+    cursor: pointer;
+}
+
+.respectSliderAgainst-li-id::-moz-range-thumb {
+    width: 30%;
+    height: 1.25rem;
+    border: 0;
+    background: url('fistbump.png') no-repeat;
+    cursor: pointer;
+}
