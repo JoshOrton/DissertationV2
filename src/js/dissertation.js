@@ -182,7 +182,7 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
     textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 2);"TextAreaWrapper";
 
-    textAreaWrapper.appendChild(populateTextAreaElement(pare ntNodeName, hiddenValue, j));
+    textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
     textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
 
     return textAreaWrapper;
@@ -286,33 +286,30 @@ function handleSubmitTextArea(event) {
 
     }
 }
-//TODO Reduce this massively!!
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
+
+    toggleButtonDiv(eventId, parentEventId);
+    toggleRespectSliderDiv(eventId, parentEventId);
+    toggleRelevancySliderDiv(eventId,parentEventId);
+    toggleTextArea(eventId, parentEventId);
+
+}
+function toggleButtonDiv(eventId, parentEventId) {
     var btnElement = "btn" + parentEventId + "-" + eventId;
-    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
-    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
-    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
-    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
-    var respectSliderValueElement ="respectSliderValue" + parentEventId + "-" + eventId;
-    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
-    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
-    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
-
     var btnDiv = document.getElementById(btnElement);
-    var respectSliderDiv = document.getElementById(respectSliderElement);
-    var relevancySliderDiv = document.getElementById(relevancySliderElement);
-    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
-    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
-    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
-    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
-    var textAreaDiv = document.getElementById(textAreaElement);
-    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
-
-
     if(btnDiv.hidden === false) hideDiv(btnDiv);
     else showDiv(btnDiv, eventId);
+}
+
+function toggleRespectSliderDiv(eventId,parentEventId) {
+    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
+    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
+    var respectSliderValueElement ="respectSliderValue" + parentEventId + "-" + eventId;
+    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
+    var respectSliderDiv = document.getElementById(respectSliderElement);
 
     if(respectSliderDiv.hidden === false) {
         hideDiv(respectSliderDiv);
@@ -324,7 +321,30 @@ function paragraphToggleHandler(event) {
         showDiv(respectSliderValueDiv);
         showDiv(respectSliderWrapperDiv);
     }
+}
 
+function toggleTextArea() {
+    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
+    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+
+    var textAreaDiv = document.getElementById(textAreaElement);
+    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
+
+    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
+    else showDiv(textAreaDiv);
+
+    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
+    else showDiv(submitTextAreaDiv);
+
+}
+
+function toggleRelevancySliderDiv(eventId, parentEventId) {
+    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
+    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
+    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
+    var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
+    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
     if(relevancySliderDiv.hidden === false){
         hideDiv(relevancySliderDiv);
         hideDiv(relevancySliderValueDiv);
@@ -335,13 +355,6 @@ function paragraphToggleHandler(event) {
         showDiv(relevancySliderValueDiv);
         showDiv(relevancySliderWrapperDiv);
     }
-
-    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
-    else showDiv(textAreaDiv);
-
-    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
-    else showDiv(submitTextAreaDiv);
-
 }
 
 $(StatementListDiv).click(function (event) {
