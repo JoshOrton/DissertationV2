@@ -182,7 +182,7 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
     textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 2);"TextAreaWrapper";
 
-    textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
+    textAreaWrapper.appendChild(populateTextAreaElement(pare ntNodeName, hiddenValue, j));
     textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
 
     return textAreaWrapper;
