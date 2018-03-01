@@ -27,3 +27,12 @@ button:hover{
     background: url("likeButton.png");
 
 }
+.btnAgainst-li-id{
+    position: relative;
+    display: inline-block;
+    height: 1.7rem;
+    width: 1.6rem;
+    margin-right: 2%;
+    background: url("likeButton.png");
+
+}

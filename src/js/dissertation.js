@@ -117,14 +117,42 @@ function populateArgumentStatements(i ,j, arr) {
 }
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
-    var buttonStatement = document.createElement('button');
+    var buttonWrapper = document.createElement('div');
+    var buttonWrapperClass = "btnWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
+    buttonWrapper.id = "btnWrapper" +parentNodeName + "-pArguments-" + j;
+    buttonWrapper.hidden = hiddenValue;
+    buttonWrapper.className = buttonWrapperClass;
+
+    buttonWrapper.appendChild(populateButton(hiddenValue,parentNodeName,j));
+    buttonWrapper.appendChild(populateButtonText(hiddenValue,parentNodeName,j));
+
+    return buttonWrapper;
+}
+function populateButton(hiddenValue,parentNodeName,j) {
+    var buttonClass = "btnWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
-    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
+    var buttonStatement = document.createElement('button');
     buttonStatement.type = "button";
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
+    buttonStatement.addEventListener("click", handleButtonToggle);
+
     return buttonStatement;
+}
+function populateButtonText(hiddenValue, parentNodeName,j) {
+    var buttonText = document.createElement('p');
+    var buttonStatementValueId = "btnValue" + parentNodeName + "-pArguments-" + j;
+    var buttonStatementClass =  "btnP" + parentNodeName.substr(0,parentNodeName.length-2);
+
+    buttonText.hidden = !hiddenValue;
+    buttonText.id = buttonStatementValueId;
+    buttonText.className = buttonStatementClass;
+    buttonText.innerHTML = 33; //TODO Fix this to grab this value dynamically, AJAX
+    buttonText.addEventListener("click", handleButtonToggle);
+
+    return buttonText
+
 }
 
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
@@ -245,6 +273,18 @@ function deBoldAllChildNodes(StatementListDiv) {
     }
 
 }
+function handleButtonToggle(event){
+    console.log(event.target.id);
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    var buttonTextDiv = document.getElementById(event.target.parentNode.childNodes[1].id.toString());
+
+    if(buttonDiv.hidden === false) hideDiv(buttonDiv);
+    else showDiv(buttonDiv);
+    if(buttonTextDiv.hidden === false)hideDiv(buttonTextDiv);
+    else showDiv(buttonTextDiv);
+
+
+}
 
 function handleSliderChange(event) {
     console.log(event.target.id);
@@ -298,9 +338,19 @@ function paragraphToggleHandler(event) {
 }
 function toggleButtonDiv(eventId, parentEventId) {
     var btnElement = "btn" + parentEventId + "-" + eventId;
+    var btnWrapperElement = "btnWrapper" + parentEventId + "-" + eventId;
+    var btnWrapperDiv = document.getElementById(btnWrapperElement);
+    var btnText = btnWrapperDiv.childNodes[1];
     var btnDiv = document.getElementById(btnElement);
+
     if(btnDiv.hidden === false) hideDiv(btnDiv);
-    else showDiv(btnDiv, eventId);
+    else showDiv(btnDiv);
+
+    if(btnWrapperDiv.hidden === false)hideDiv(btnWrapperDiv);
+    else showDiv(btnWrapperDiv);
+
+    if(btnText.hidden === false) hideDiv(btnText);
+    else showDiv(btnText);
 }
 
 function toggleRespectSliderDiv(eventId,parentEventId) {
