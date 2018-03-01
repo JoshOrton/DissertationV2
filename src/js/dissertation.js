@@ -323,7 +323,7 @@ function toggleRespectSliderDiv(eventId,parentEventId) {
     }
 }
 
-function toggleTextArea() {
+function toggleTextArea(eventId, parentEventId) {
     var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
     var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
 
