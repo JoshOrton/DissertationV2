@@ -117,41 +117,17 @@ function populateArgumentStatements(i ,j, arr) {
 }
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
-    var buttonWrapper = document.createElement('div');
-    var buttonWrapperClass = "btnWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
-    buttonWrapper.id = "btnWrapper" +parentNodeName + "-pArguments-" + j;
-    buttonWrapper.hidden = hiddenValue;
-    buttonWrapper.className = buttonWrapperClass;
-
-    buttonWrapper.appendChild(populateButton(hiddenValue,parentNodeName,j));
-    buttonWrapper.appendChild(populateButtonText(hiddenValue,parentNodeName,j));
-
-    return buttonWrapper;
-}
-function populateButton(hiddenValue,parentNodeName,j) {
-    var buttonClass = "btnWrapper" + parentNodeName.substr(0,parentNodeName.length-2);
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
+    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     var buttonStatement = document.createElement('button');
     buttonStatement.type = "button";
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
+    buttonStatement.value = 22;
     buttonStatement.className = buttonClass;
     buttonStatement.addEventListener("click", handleButtonToggle);
-
+    buttonStatement.addEventListener("mouseover", handleButtonHover);
     return buttonStatement;
-}
-function populateButtonText(hiddenValue, parentNodeName,j) {
-    var buttonText = document.createElement('p');
-    var buttonStatementValueId = "btnValue" + parentNodeName + "-pArguments-" + j;
-    var buttonStatementClass =  "btnP" + parentNodeName.substr(0,parentNodeName.length-2);
-
-    buttonText.hidden = !hiddenValue;
-    buttonText.id = buttonStatementValueId;
-    buttonText.className = buttonStatementClass;
-    buttonText.innerHTML = 33; //TODO Fix this to grab this value dynamically, AJAX
-    buttonText.addEventListener("click", handleButtonToggle);
-
-    return buttonText
 
 }
 
@@ -204,7 +180,7 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
     return sliderElementValue;
 }
 
-//TODO Fix coloumn size, smaller box and submit button closer.
+//TODO Fix coloumn size, smaller box and submit closer.
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
@@ -276,14 +252,18 @@ function deBoldAllChildNodes(StatementListDiv) {
 function handleButtonToggle(event){
     console.log(event.target.id);
     var buttonDiv = document.getElementById(event.target.id.toString());
-    var buttonTextDiv = document.getElementById(event.target.parentNode.childNodes[1].id.toString());
 
-    if(buttonDiv.hidden === false) hideDiv(buttonDiv);
+    if(buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps change button to dislike, or undo perhaps.
     else showDiv(buttonDiv);
-    if(buttonTextDiv.hidden === false)hideDiv(buttonTextDiv);
-    else showDiv(buttonTextDiv);
 
-
+}
+function handleButtonHover(event) {
+    //TODO Add tooltip to this perhaps.
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    var currentButtonDivValue = parseInt(buttonDiv.value);
+    currentButtonDivValue = currentButtonDivValue + 1;
+    buttonDiv.value = currentButtonDivValue;//TODO DO this dynamically, send request to update database to increment by 1.
+    console.log(buttonDiv.value);
 }
 
 function handleSliderChange(event) {
@@ -340,17 +320,11 @@ function toggleButtonDiv(eventId, parentEventId) {
     var btnElement = "btn" + parentEventId + "-" + eventId;
     var btnWrapperElement = "btnWrapper" + parentEventId + "-" + eventId;
     var btnWrapperDiv = document.getElementById(btnWrapperElement);
-    var btnText = btnWrapperDiv.childNodes[1];
     var btnDiv = document.getElementById(btnElement);
 
     if(btnDiv.hidden === false) hideDiv(btnDiv);
     else showDiv(btnDiv);
 
-    if(btnWrapperDiv.hidden === false)hideDiv(btnWrapperDiv);
-    else showDiv(btnWrapperDiv);
-
-    if(btnText.hidden === false) hideDiv(btnText);
-    else showDiv(btnText);
 }
 
 function toggleRespectSliderDiv(eventId,parentEventId) {
