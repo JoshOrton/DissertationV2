@@ -159,6 +159,7 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
     sliderElement.setAttribute("data-show-value","true");
     sliderElement.id = sliderId;
     sliderElement.addEventListener("change", handleSliderChange);
+    sliderElement.addEventListener("input", handleSliderChange);
     sliderElement.addEventListener("mouseleave", handleSliderLeave);
     sliderElement.addEventListener("mouseover", handleSliderHover);
 
