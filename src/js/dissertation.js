@@ -121,12 +121,13 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     var buttonStatement = document.createElement('button');
     buttonStatement.type = "button";
+    buttonStatement.setAttribute("ValueLike", "22" );
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
-    buttonStatement.value = 22;
     buttonStatement.className = buttonClass;
     buttonStatement.addEventListener("click", handleButtonToggle);
     buttonStatement.addEventListener("mouseover", handleButtonHover);
+    buttonStatement.addEventListener("mouseout", handleButtonUnHover);
     return buttonStatement;
 
 }
@@ -252,6 +253,17 @@ function deBoldAllChildNodes(StatementListDiv) {
 function handleButtonToggle(event){
     console.log(event.target.id);
     var buttonDiv = document.getElementById(event.target.id.toString());
+    var currentButtonDivValue = parseInt(buttonDiv.getAttribute("ValueLike"));
+    currentButtonDivValue = currentButtonDivValue + 1;
+    buttonDiv.setAttribute("ValueLike",currentButtonDivValue.toString());
+
+    // $(buttonDiv).data('bs.tooltip',false)
+    //     .tooltip({title: buttonDiv.getAttribute("ValueLike"),
+    //         trigger: 'hover'});
+    $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
+        .attr("trigger", "hover")
+        .tooltip('show');
+
 
     if(buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps change button to dislike, or undo perhaps.
     else showDiv(buttonDiv);
@@ -260,10 +272,17 @@ function handleButtonToggle(event){
 function handleButtonHover(event) {
     //TODO Add tooltip to this perhaps.
     var buttonDiv = document.getElementById(event.target.id.toString());
-    var currentButtonDivValue = parseInt(buttonDiv.value);
-    currentButtonDivValue = currentButtonDivValue + 1;
-    buttonDiv.value = currentButtonDivValue;//TODO DO this dynamically, send request to update database to increment by 1.
-    console.log(buttonDiv.value);
+    $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+    console.log(buttonDiv.getAttribute("ValueLike"));
+}
+function handleButtonUnHover(event) {
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    $(buttonDiv).tooltip('hide');
+
+
 }
 
 function handleSliderChange(event) {
@@ -294,14 +313,14 @@ function handleTextAreaClear(event) {
     var textAreaElement = document.getElementById(event.target.id);
     if(textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
 }
+
 function handleSubmitTextArea(event) {
     var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
     if(textAreaElement.innerHTML!==""){
         textAreaElement.innerHTML = "";
         console.log("AddComments and populate text");
-        var relatedArgumentValue = "";
         var relatedDiv = event.target.parentNode.classList[0];
-        relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
+        var relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
         console.log(relatedArgumentValue);
 
     }
