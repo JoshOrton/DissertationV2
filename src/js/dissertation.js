@@ -1,9 +1,7 @@
 //TODO Add submit and comments buttons.
-//TODO Add like functionality.
 //TODO Add Twitter API somehow.
 
 
-//TODO CSS change ordered columns.
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
@@ -55,7 +53,6 @@ function populateReasoningStatementArray(statementArray, unformattedArgumentArra
     return reasoningStatementList;
 }
 
-//TODO Worth just putting this in HTML, probs not actually.
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
@@ -182,7 +179,6 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
     return sliderElementValue;
 }
 
-//TODO Fix coloumn size, smaller box and submit closer.
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
@@ -266,12 +262,11 @@ function handleButtonToggle(event){
         .tooltip('show');
 
 
-    if(buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps change button to dislike, or undo perhaps.
+    if(buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps toggle boolean change button to dislike, or undo perhaps.
     else showDiv(buttonDiv);
 
 }
 function handleButtonHover(event) {
-    //TODO Add tooltip to this perhaps.
     var buttonDiv = document.getElementById(event.target.id.toString());
     $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
         .attr("trigger", "hover")
