@@ -119,6 +119,7 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonStatement = document.createElement('button');
     buttonStatement.type = "button";
     buttonStatement.setAttribute("ValueLike", "22" );
+    buttonStatement.setAttribute("isLiked", "false");
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
@@ -251,12 +252,18 @@ function handleButtonToggle(event){
     console.log(event.target.id);
     var buttonDiv = document.getElementById(event.target.id.toString());
     var currentButtonDivValue = parseInt(buttonDiv.getAttribute("ValueLike"));
-    currentButtonDivValue = currentButtonDivValue + 1;
+    if(buttonDiv.getAttribute("isLiked") === "true"){
+        currentButtonDivValue = currentButtonDivValue - 1;
+        buttonDiv.setAttribute("isLiked", "false");
+        buttonDiv.className = buttonDiv.className.toString().replace(" liked", "");
+    } else {
+        currentButtonDivValue = currentButtonDivValue + 1;
+        buttonDiv.setAttribute("isLiked", "true");
+        buttonDiv.className = buttonDiv.className + " liked";
+    }
+
     buttonDiv.setAttribute("ValueLike",currentButtonDivValue.toString());
 
-    // $(buttonDiv).data('bs.tooltip',false)
-    //     .tooltip({title: buttonDiv.getAttribute("ValueLike"),
-    //         trigger: 'hover'});
     $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
         .attr("trigger", "hover")
         .tooltip('show');
