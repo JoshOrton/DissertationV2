@@ -117,8 +117,9 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
     var buttonStatement = document.createElement('button');
+    var initialButtonValue = ((11 * j)+6).toString();
     buttonStatement.type = "button";
-    buttonStatement.setAttribute("ValueLike", "22" );
+    buttonStatement.setAttribute("ValueLike", initialButtonValue);
     buttonStatement.setAttribute("isLiked", "false");
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
