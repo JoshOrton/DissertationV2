@@ -71,19 +71,23 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
     //Do not need one for isAgaisntArguments, as by definition if it is not for this then must be agaisnt.
     //! converts from non boolean to Boolean
     // ! then inverts it.
+    //TODO MAy need to change this.
     var isForArguments = !div.id.match("AgainstListOL");
 
-    for (var i = 0; i < arr.length; i++) {
+    for (var statementIndex = 0; statementIndex < arr.length; statementIndex++) {
         var listItem = document.createElement('li');
         listItem.setAttribute("forArgument", isForArguments.toString());
-        listItem.id = getlistItemId(listItem,i);
+        listItem.id = getlistItemId(listItem,statementIndex);
         listItem.hidden = hiddenValue;
-        for(var j = 0; j < arr[i].length; j++){
-            listItem.appendChild(populateArgumentStatements(i,j,arr));
-            listItem.appendChild(populateButtonsForArguments(listItem.id, hiddenValue, j));
-            listItem.appendChild(populateSliderForArguments("respect" , listItem.id, hiddenValue, j));
-            listItem.appendChild(populateSliderForArguments("relevancy", listItem.id, hiddenValue, j));
-            listItem.appendChild(populateTextAreaForArguments(listItem.id, hiddenValue, j));
+        for(var argumentIndex = 0; argumentIndex < arr[statementIndex].length; argumentIndex++){
+            var wrapperListItem = document.createElement('div');
+            wrapperListItem.id  = getWrapperListItemId(listItem,statementIndex,argumentIndex);
+            wrapperListItem.appendChild(populateArgumentStatements(statementIndex,argumentIndex,arr));
+            wrapperListItem.appendChild(populateButtonsForArguments(wrapperListItem.id, hiddenValue, argumentIndex));
+            wrapperListItem.appendChild(populateSliderForArguments("respect" , wrapperListItem.id, hiddenValue, argumentIndex));
+            wrapperListItem.appendChild(populateSliderForArguments("relevancy", wrapperListItem.id, hiddenValue, argumentIndex));
+            wrapperListItem.appendChild(populateTextAreaForArguments(wrapperListItem.id, hiddenValue, argumentIndex));
+            listItem.appendChild(wrapperListItem);
             //TODO Add source submit text and css.
         }
         div.appendChild(listItem);
@@ -102,8 +106,15 @@ function getlistItemId(listItem,i) {
     } else {
        return 'Against-li-id-'+i;
     }
-
-
+}
+//TODO If use this one, need to update all child nodes CSS, / id.
+//TODO Perhaps could add last item.
+function getWrapperListItemId(listItem,i,j) {
+    if (listItem.getAttribute("forArgument") === "true") {
+        return 'For-li-id-'+i + '-' + j;
+    } else {
+        return 'Against-li-id-'+i + '-' + j;
+    }
 }
 
 function populateArgumentStatements(i ,j, arr) {
@@ -116,7 +127,7 @@ function populateArgumentStatements(i ,j, arr) {
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
-    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
+    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-4);
     var buttonStatement = document.createElement('button');
     var initialButtonValue = ((11 * j)+6).toString();
     buttonStatement.type = "button";
@@ -135,7 +146,7 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
    var wrapper = document.createElement('div');
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
-    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
+    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-4) + " override";
 
     wrapper.hidden = hiddenValue;
 
@@ -147,7 +158,7 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
 function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
-    var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-2);
+    var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-4);
 
     sliderElement.type  ="range";
     sliderElement.min = "1";
@@ -171,7 +182,7 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
 function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenValue){
     var sliderElementValue = document.createElement('p');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
-    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-2) + " override";
+    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-4) + " override";
 
     sliderElementValue.hidden = hiddenValue;
     sliderElementValue.value = "50%";
@@ -185,7 +196,7 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
-    textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 2);"TextAreaWrapper";
+    textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 4);"TextAreaWrapper";
 
     textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
     textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
@@ -195,7 +206,7 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
 function populateTextAreaElement(parentNodeName, hiddenValue, j) {
     var textAreaElement = document.createElement("textarea");
     var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
-    var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
+    var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 4);
     textAreaElement.name = "comment";
     textAreaElement.id = textAreaId;
     textAreaElement.className = textAreaClass;
@@ -209,7 +220,7 @@ function populateTextAreaElement(parentNodeName, hiddenValue, j) {
 function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaSubmit = document.createElement("input");
     var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments-" + j;
-    var textAreaSubmitClass = "submitTextArea" + parentNodeName.substr(0, parentNodeName.length - 2);
+    var textAreaSubmitClass = "submitTextArea" + parentNodeName.substr(0, parentNodeName.length - 4);
     textAreaSubmit.type = "submit";
     textAreaSubmit.hidden = hiddenValue;
     textAreaSubmit.id = textAreaSubmitId;
@@ -321,15 +332,27 @@ function handleTextAreaClear(event) {
 
 function handleSubmitTextArea(event) {
     var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
-    if(textAreaElement.innerHTML!==""){
-        textAreaElement.innerHTML = "";
+    var textAreaText = textAreaElement.value.toString();
+    clearTextBox(textAreaElement, textAreaText);
+    addComment(textAreaElement,textAreaText);
+
+}
+function clearTextBox(textBoxDiv, textAreaText) {
+    if(!(textAreaText ==="")){
+        textBoxDiv.value = "";
         console.log("AddComments and populate text");
         var relatedDiv = event.target.parentNode.classList[0];
         var relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
         console.log(relatedArgumentValue);
-
     }
 }
+
+function addComment(textBoxDiv, textAreaText) {
+
+
+
+}
+
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
