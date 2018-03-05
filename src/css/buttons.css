@@ -27,3 +27,7 @@ button:hover{
     background: url("likeButton.png");
 
 }
+
+.liked{
+    background: url("likedButton.png");
+}

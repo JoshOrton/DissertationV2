@@ -1,9 +1,7 @@
 //TODO Add submit and comments buttons.
-//TODO Add like functionality.
 //TODO Add Twitter API somehow.
 
 
-//TODO CSS change ordered columns.
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
@@ -55,7 +53,6 @@ function populateReasoningStatementArray(statementArray, unformattedArgumentArra
     return reasoningStatementList;
 }
 
-//TODO Worth just putting this in HTML, probs not actually.
 function populateStatementsAsUnorderedList(div, arr, hiddenValue){
     for (var i = 0; i < arr.length; i++) {
         var listItem = document.createElement('li');
@@ -117,14 +114,21 @@ function populateArgumentStatements(i ,j, arr) {
 }
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
-    var buttonStatement = document.createElement('button');
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
     var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-2);
+    var buttonStatement = document.createElement('button');
+    var initialButtonValue = ((11 * j)+6).toString();
     buttonStatement.type = "button";
+    buttonStatement.setAttribute("ValueLike", initialButtonValue);
+    buttonStatement.setAttribute("isLiked", "false");
     buttonStatement.hidden = hiddenValue;
     buttonStatement.id = buttonId;
     buttonStatement.className = buttonClass;
+    buttonStatement.addEventListener("click", handleButtonToggle);
+    buttonStatement.addEventListener("mouseover", handleButtonHover);
+    buttonStatement.addEventListener("mouseout", handleButtonUnHover);
     return buttonStatement;
+
 }
 
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
@@ -154,6 +158,7 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
     sliderElement.setAttribute("data-show-value","true");
     sliderElement.id = sliderId;
     sliderElement.addEventListener("change", handleSliderChange);
+    sliderElement.addEventListener("input", handleSliderChange);
     sliderElement.addEventListener("mouseleave", handleSliderLeave);
     sliderElement.addEventListener("mouseover", handleSliderHover);
 
@@ -176,13 +181,12 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
     return sliderElementValue;
 }
 
-//TODO Fix coloumn size, smaller box and submit button closer.
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
     textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 2);"TextAreaWrapper";
 
-    textAreaWrapper.appendChild(populateTextAreaElement(pare ntNodeName, hiddenValue, j));
+    textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
     textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
 
     return textAreaWrapper;
@@ -245,6 +249,45 @@ function deBoldAllChildNodes(StatementListDiv) {
     }
 
 }
+function handleButtonToggle(event){
+    console.log(event.target.id);
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    var currentButtonDivValue = parseInt(buttonDiv.getAttribute("ValueLike"));
+    if(buttonDiv.getAttribute("isLiked") === "true"){
+        currentButtonDivValue = currentButtonDivValue - 1;
+        buttonDiv.setAttribute("isLiked", "false");
+        buttonDiv.className = buttonDiv.className.toString().replace(" liked", "");
+    } else {
+        currentButtonDivValue = currentButtonDivValue + 1;
+        buttonDiv.setAttribute("isLiked", "true");
+        buttonDiv.className = buttonDiv.className + " liked";
+    }
+
+    buttonDiv.setAttribute("ValueLike",currentButtonDivValue.toString());
+
+    $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+
+    if(buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps toggle boolean change button to dislike, or undo perhaps.
+    else showDiv(buttonDiv);
+
+}
+function handleButtonHover(event) {
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    $(buttonDiv).attr("data-original-title",buttonDiv.getAttribute("ValueLike"))
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+    console.log(buttonDiv.getAttribute("ValueLike"));
+}
+function handleButtonUnHover(event) {
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    $(buttonDiv).tooltip('hide');
+
+
+}
 
 function handleSliderChange(event) {
     console.log(event.target.id);
@@ -274,45 +317,46 @@ function handleTextAreaClear(event) {
     var textAreaElement = document.getElementById(event.target.id);
     if(textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
 }
+
 function handleSubmitTextArea(event) {
     var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
     if(textAreaElement.innerHTML!==""){
         textAreaElement.innerHTML = "";
         console.log("AddComments and populate text");
-        var relatedArgumentValue = "";
         var relatedDiv = event.target.parentNode.classList[0];
-        relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
+        var relatedArgumentValue = relatedDiv.slice(relatedDiv.length-1, relatedDiv.length);
         console.log(relatedArgumentValue);
 
     }
 }
-//TODO Reduce this massively!!
 function paragraphToggleHandler(event) {
     var eventId = event.target.id;
     var parentEventId = event.target.parentNode.id;
+
+    toggleButtonDiv(eventId, parentEventId);
+    toggleRespectSliderDiv(eventId, parentEventId);
+    toggleRelevancySliderDiv(eventId,parentEventId);
+    toggleTextArea(eventId, parentEventId);
+
+}
+function toggleButtonDiv(eventId, parentEventId) {
     var btnElement = "btn" + parentEventId + "-" + eventId;
-    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
-    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
-    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
-    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
-    var respectSliderValueElement ="respectSliderValue" + parentEventId + "-" + eventId;
-    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
-    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
-    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
-
+    var btnWrapperElement = "btnWrapper" + parentEventId + "-" + eventId;
+    var btnWrapperDiv = document.getElementById(btnWrapperElement);
     var btnDiv = document.getElementById(btnElement);
-    var respectSliderDiv = document.getElementById(respectSliderElement);
-    var relevancySliderDiv = document.getElementById(relevancySliderElement);
-    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
-    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
-    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
-    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
-    var textAreaDiv = document.getElementById(textAreaElement);
-    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
-
 
     if(btnDiv.hidden === false) hideDiv(btnDiv);
-    else showDiv(btnDiv, eventId);
+    else showDiv(btnDiv);
+
+}
+
+function toggleRespectSliderDiv(eventId,parentEventId) {
+    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
+    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
+    var respectSliderValueElement ="respectSliderValue" + parentEventId + "-" + eventId;
+    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
+    var respectSliderDiv = document.getElementById(respectSliderElement);
 
     if(respectSliderDiv.hidden === false) {
         hideDiv(respectSliderDiv);
@@ -324,7 +368,30 @@ function paragraphToggleHandler(event) {
         showDiv(respectSliderValueDiv);
         showDiv(respectSliderWrapperDiv);
     }
+}
 
+function toggleTextArea(eventId, parentEventId) {
+    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
+    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+
+    var textAreaDiv = document.getElementById(textAreaElement);
+    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
+
+    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
+    else showDiv(textAreaDiv);
+
+    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
+    else showDiv(submitTextAreaDiv);
+
+}
+
+function toggleRelevancySliderDiv(eventId, parentEventId) {
+    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
+    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
+    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
+    var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
+    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
     if(relevancySliderDiv.hidden === false){
         hideDiv(relevancySliderDiv);
         hideDiv(relevancySliderValueDiv);
@@ -335,13 +402,6 @@ function paragraphToggleHandler(event) {
         showDiv(relevancySliderValueDiv);
         showDiv(relevancySliderWrapperDiv);
     }
-
-    if(textAreaDiv.hidden === false) hideDiv(textAreaDiv);
-    else showDiv(textAreaDiv);
-
-    if(submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
-    else showDiv(submitTextAreaDiv);
-
 }
 
 $(StatementListDiv).click(function (event) {
