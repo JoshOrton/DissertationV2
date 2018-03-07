@@ -1,4 +1,8 @@
-//TODO Add submit and comments buttons.
+
+//TODO Fix bug whereby respect and relevancy sliders appear wrongly.
+//TODO Fix bug where comment appends to end of list rather than below next comment, probably down to fact that we look at the div at top and append, rather than individual divs.
+//TODO Therefore we will probably need to either create a new Div for the first one, or a new function for new comments on comments, hopign that should do it.
+//TODO NExt iteration, Twitter, Sources, and
 //TODO Add source statements?
 //TODO Add Twitter API somehow.
 
@@ -146,7 +150,7 @@ function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
 function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue, j) {
    var wrapper = document.createElement('div');
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
-    wrapper.className = currentNodeName + "SliderWrapper" + parentNodeName.substr(0,parentNodeName.length-4) + " override";
+    wrapper.className = getSliderWrapperClassName(currentNodeName,parentNodeName);
 
     wrapper.hidden = hiddenValue;
 
@@ -155,10 +159,30 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
 
     return wrapper;
 }
+function getSliderWrapperClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "SliderWrapper" + parentNodeName.substr(0,lengthOfClassName) + " override";
+}
+
+function getSliderClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "Slider" + parentNodeName.substr(0,lengthOfClassName) + " override";
+}
+
+function getSliderValueClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "Slider" + parentNodeName.substr(0,lengthOfClassName) + " override";
+}
 function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
-    var sliderClass =  currentNodeName + "Slider" + parentNodeName.substr(0,parentNodeName.length-4);
+    var sliderClass =  getSliderClassName(currentNodeName,parentNodeName);
 
     sliderElement.type  ="range";
     sliderElement.min = "1";
@@ -182,7 +206,7 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
 function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenValue){
     var sliderElementValue = document.createElement('p');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
-    var sliderValueClass =  currentNodeName + "SliderValue" + parentNodeName.substr(0,parentNodeName.length-4) + " override";
+    var sliderValueClass =  getSliderValueClassName(currentNodeName,parentNodeName);
 
     sliderElementValue.hidden = hiddenValue;
     sliderElementValue.value = "50%";
@@ -196,7 +220,7 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
     textAreaWrapper.className = "TextAreaWrapper" + parentNodeName + "-pArguments-" + j;
-    textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 4);"TextAreaWrapper";
+    textAreaWrapper.id = "TextAreaWrapper" + parentNodeName.substr(0, parentNodeName.length - 4);
 
     textAreaWrapper.appendChild(populateTextAreaElement(parentNodeName, hiddenValue, j));
     textAreaWrapper.appendChild(populateSubmitTextAreaForArguments(parentNodeName,hiddenValue,j));
@@ -346,11 +370,30 @@ function clearTextBox(textBoxDiv, textAreaText) {
         console.log(relatedArgumentValue);
     }
 }
-
+//TODO Add other sliders and buttons, and id to this.
 function addComment(textBoxDiv, textAreaText) {
+    var replyWrapper = document.createElement('div');
+    var originalPost = textBoxDiv.parentNode.parentNode;
+    var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
+    var hiddenValue = false;
 
+    replyWrapper.id = getReplyNumber(originalPost.id,numberOfPreviousReplies);
 
+    //Annoying to reuse have to put text into 2D array, maybe write new function.
+    replyWrapper.appendChild(populateArgumentStatements(0,0,[[textAreaText]]));
+    replyWrapper.appendChild(populateButtonsForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateSliderForArguments("respect" , replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
 
+    // Inside wrapperDiv for original comment.
+    textBoxDiv.parentNode.parentNode.appendChild(replyWrapper);
+}
+function getReplyNumber(originalPost, numberOfPreviousReplies){
+    return originalPost.toString() + "-" + numberOfPreviousReplies.toString();
+}
+function getNumberOfPreviousReplies(originalPostId) {
+   return $('[id^='+originalPostId+']').length;
 }
 
 function paragraphToggleHandler(event) {
