@@ -86,16 +86,26 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue){
         for(var argumentIndex = 0; argumentIndex < arr[statementIndex].length; argumentIndex++){
             var wrapperListItem = document.createElement('div');
             wrapperListItem.id  = getWrapperListItemId(listItem,statementIndex,argumentIndex);
-            wrapperListItem.appendChild(populateArgumentStatements(statementIndex,argumentIndex,arr));
-            wrapperListItem.appendChild(populateButtonsForArguments(wrapperListItem.id, hiddenValue, argumentIndex));
-            wrapperListItem.appendChild(populateSliderForArguments("respect" , wrapperListItem.id, hiddenValue, argumentIndex));
-            wrapperListItem.appendChild(populateSliderForArguments("relevancy", wrapperListItem.id, hiddenValue, argumentIndex));
-            wrapperListItem.appendChild(populateTextAreaForArguments(wrapperListItem.id, hiddenValue, argumentIndex));
+            wrapperListItem.appendChild(populateArgumentContent(wrapperListItem, statementIndex,argumentIndex,arr,hiddenValue));
             listItem.appendChild(wrapperListItem);
             //TODO Add source submit text and css.
         }
         div.appendChild(listItem);
     }
+}
+
+function populateArgumentContent(originalPost, statementIndex, argumentIndex, arr, hiddenValue) {
+    var replyWrapper = document.createElement('div');
+    var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
+    replyWrapper.id = getReplyNumber(originalPost.id,numberOfPreviousReplies);
+
+    replyWrapper.appendChild(populateArgumentStatements(statementIndex,argumentIndex,arr));
+    replyWrapper.appendChild(populateButtonsForArguments(replyWrapper.id, hiddenValue, argumentIndex));
+    replyWrapper.appendChild(populateSliderForArguments("respect" , replyWrapper.id, hiddenValue, argumentIndex));
+    replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, argumentIndex));
+    replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, argumentIndex));
+
+    return replyWrapper;
 }
 
 function showDiv(div) {
@@ -128,10 +138,17 @@ function populateArgumentStatements(i ,j, arr) {
     textItem.innerHTML = arr[i][j];
     return textItem;
 }
+function populateArgumentReply(textAreaText, previousReplies) {
+    var textItem = document.createElement('p');
+    textItem.id = 'pArguments-' + previousReplies;
+    textItem.className = "pArgumentStyle";
+    textItem.innerHTML = textAreaText.toString();
+    return textItem;
+}
 
 function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
     var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
-    var buttonClass = "btn" + parentNodeName.substr(0,parentNodeName.length-4);
+    var buttonClass = getButtonClassName(parentNodeName);
     var buttonStatement = document.createElement('button');
     var initialButtonValue = ((11 * j)+6).toString();
     buttonStatement.type = "button";
@@ -159,6 +176,13 @@ function populateSliderForArguments(currentNodeName,parentNodeName, hiddenValue,
 
     return wrapper;
 }
+function getButtonClassName(parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return "btn" + parentNodeName.substr(0,lengthOfClassName);
+
+}
 function getSliderWrapperClassName(currentNodeName, parentNodeName) {
     var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
     if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
@@ -179,6 +203,21 @@ function getSliderValueClassName(currentNodeName, parentNodeName) {
 
     return currentNodeName + "SliderValue" + parentNodeName.substr(0,lengthOfClassName) + " override";
 }
+
+function getTextBoxAreaClassName(parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return "TextArea" + parentNodeName.substr(0,lengthOfClassName);
+}
+function getSubmitTextBoxAreaClassName(parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
+
+    return "submitTextArea" + parentNodeName.substr(0,lengthOfClassName);
+}
+
+
 function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
     var sliderElement = document.createElement('input');
     var sliderId = currentNodeName + "Slider" + parentNodeName + "-pArguments-" + j;
@@ -230,7 +269,7 @@ function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
 function populateTextAreaElement(parentNodeName, hiddenValue, j) {
     var textAreaElement = document.createElement("textarea");
     var textAreaId = "TextArea" + parentNodeName + "-pArguments-" + j;
-    var textAreaClass = "TextArea" + parentNodeName.substr(0, parentNodeName.length - 4);
+    var textAreaClass =  getTextBoxAreaClassName(parentNodeName);
     textAreaElement.name = "comment";
     textAreaElement.id = textAreaId;
     textAreaElement.className = textAreaClass;
@@ -244,7 +283,7 @@ function populateTextAreaElement(parentNodeName, hiddenValue, j) {
 function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaSubmit = document.createElement("input");
     var textAreaSubmitId = "submitTextArea" +parentNodeName + "-pArguments-" + j;
-    var textAreaSubmitClass = "submitTextArea" + parentNodeName.substr(0, parentNodeName.length - 4);
+    var textAreaSubmitClass = getSubmitTextBoxAreaClassName(parentNodeName);
     textAreaSubmit.type = "submit";
     textAreaSubmit.hidden = hiddenValue;
     textAreaSubmit.id = textAreaSubmitId;
@@ -380,7 +419,7 @@ function addComment(textBoxDiv, textAreaText) {
     replyWrapper.id = getReplyNumber(originalPost.id,numberOfPreviousReplies);
 
     //Annoying to reuse have to put text into 2D array, maybe write new function.
-    replyWrapper.appendChild(populateArgumentStatements(0,0,[[textAreaText]]));
+    replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
     replyWrapper.appendChild(populateButtonsForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("respect" , replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
