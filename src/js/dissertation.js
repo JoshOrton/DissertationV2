@@ -177,7 +177,7 @@ function getSliderValueClassName(currentNodeName, parentNodeName) {
     var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
     if(parentNodeName.toString().substr(0,1) === "A") lengthOfClassName = 13;
 
-    return currentNodeName + "Slider" + parentNodeName.substr(0,lengthOfClassName) + " override";
+    return currentNodeName + "SliderValue" + parentNodeName.substr(0,lengthOfClassName) + " override";
 }
 function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
     var sliderElement = document.createElement('input');
