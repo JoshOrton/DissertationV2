@@ -98,9 +98,10 @@ function populateArgumentContent(originalPost, statementIndex, argumentIndex, ar
     var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
     replyWrapper.id = getReplyNumber(originalPost.id, numberOfPreviousReplies);
     replyWrapper.value = "comment";
-
     replyWrapper.appendChild(populateArgumentStatements(statementIndex, argumentIndex, arr));
-    replyWrapper.appendChild(populateButtonsForArguments(replyWrapper.id, hiddenValue, argumentIndex));
+    replyWrapper.appendChild(populateButton("Thread", replyWrapper.id, argumentIndex));
+    replyWrapper.appendChild(populateButton("Interactivity", replyWrapper.id, argumentIndex));
+    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, argumentIndex));
     replyWrapper.appendChild(populateSliderForArguments("respect", replyWrapper.id, hiddenValue, argumentIndex));
     replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, argumentIndex));
     replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, argumentIndex));
@@ -134,6 +135,38 @@ function getWrapperListItemId(listItem, i, j) {
     }
 }
 
+function populateButton(buttonType, parentNodeName, j){
+    var buttonToggle = document.createElement('button');
+
+    buttonToggle.type = "button";
+    buttonToggle.id = getButtonId(buttonType, parentNodeName, j);
+    buttonToggle.className = getButtonClassName(parentNodeName,buttonType);
+    buttonToggle.hidden = getHiddenValue(buttonType);
+
+    buttonToggle.setAttribute("buttonType", buttonType);
+    buttonToggle.setAttribute("Value", getInitialButtonValue(buttonType, j));
+    buttonToggle.setAttribute("isClicked", "false");
+
+    buttonToggle.addEventListener("click", handleButtonToggle);
+    buttonToggle.addEventListener("mouseover", handleButtonHover);
+    buttonToggle.addEventListener("mouseout", handleButtonUnHover);
+    return buttonToggle;
+}
+
+function getButtonId(buttonType, parentNodeName, j) {
+    return "btn" + buttonType + parentNodeName + "-pArguments-" + j;
+}
+function getHiddenValue(buttonType) {
+    //Maybe change this to like rather than blank.
+    if(buttonType === "Like") return true;
+    else return false;
+}
+function getInitialButtonValue(buttonType, j) {
+    if(buttonType === "Like") return ((11 * j) + 6).toString();
+    else return "Show " + buttonType;
+}
+
+
 function populateArgumentStatements(i, j, arr) {
     var textItem = document.createElement('p');
     textItem.id = 'pArguments-' + j;
@@ -149,24 +182,6 @@ function populateArgumentReply(textAreaText, previousReplies) {
     return textItem;
 }
 
-function populateButtonsForArguments(parentNodeName, hiddenValue, j) {
-    var buttonId = "btn" + parentNodeName + "-pArguments-" + j;
-    var buttonClass = getButtonClassName(parentNodeName);
-    var buttonStatement = document.createElement('button');
-    var initialButtonValue = ((11 * j) + 6).toString();
-    buttonStatement.type = "button";
-    buttonStatement.setAttribute("ValueLike", initialButtonValue);
-    buttonStatement.setAttribute("isLiked", "false");
-    buttonStatement.hidden = hiddenValue;
-    buttonStatement.id = buttonId;
-    buttonStatement.className = buttonClass;
-    buttonStatement.addEventListener("click", handleButtonToggle);
-    buttonStatement.addEventListener("mouseover", handleButtonHover);
-    buttonStatement.addEventListener("mouseout", handleButtonUnHover);
-    return buttonStatement;
-
-}
-
 function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue, j) {
     var wrapper = document.createElement('div');
     wrapper.id = currentNodeName + "SliderWrapper" + parentNodeName + "-pArguments-" + j;
@@ -180,11 +195,11 @@ function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue
     return wrapper;
 }
 
-function getButtonClassName(parentNodeName) {
+function getButtonClassName(parentNodeName, buttonType) {
     var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
     if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
 
-    return "btn" + parentNodeName.substr(0, lengthOfClassName);
+    return "btn" + buttonType + parentNodeName.substr(0, lengthOfClassName);
 
 }
 
@@ -314,8 +329,7 @@ function argumentIndexInBounds(argumentIndex, unformattedArgumentArray) {
 }
 function anyChildNodesShowing(div) {
     for (var i = 0; i < div.childElementCount; i++) {
-        //TODO Fix here, problem is that .value returning null rather than reply, for some fucked reason.
-        if((div.childNodes[i].value === "reply") && (div.childNodes[i].hidden = false)){
+        if((div.childNodes[i].value === "reply") && (div.childNodes[i].hidden === false)){
             return true;
         }
     }
@@ -323,15 +337,27 @@ function anyChildNodesShowing(div) {
     return false;
 }
 //We want all the div's to be hiddden
-function hideAllChildNodes(div) {
+function hideAllReplyChildNodes(div) {
     for (var i = 0; i < div.childElementCount; i++) {
         if(div.childNodes[i].value === "reply") div.childNodes[i].hidden = true;
     }
 }
 //We want all the divs' to be shown.
-function showAllChildNodes(div) {
+function showAllReplyChildNodes(div) {
     for (var i = 0; i < div.childElementCount; i++) {
         if(div.childNodes[i].value === "reply") div.childNodes[i].hidden = false;
+    }
+}
+//We want all the div's to be hiddden
+function hideAllChildNodes(div) {
+    for (var i = 0; i < div.childElementCount; i++) {
+        div.childNodes[i].hidden = true;
+    }
+}
+//We want all the divs' to be shown.
+function showAllChildNodes(div) {
+    for (var i = 0; i < div.childElementCount; i++) {
+        div.childNodes[i].hidden = false;
     }
 }
 
@@ -354,36 +380,75 @@ function deBoldAllChildNodes(StatementListDiv) {
 function handleButtonToggle(event) {
     console.log(event.target.id);
     var buttonDiv = document.getElementById(event.target.id.toString());
-    var currentButtonDivValue = parseInt(buttonDiv.getAttribute("ValueLike"));
-    if (buttonDiv.getAttribute("isLiked") === "true") {
-        currentButtonDivValue = currentButtonDivValue - 1;
-        buttonDiv.setAttribute("isLiked", "false");
-        buttonDiv.className = buttonDiv.className.toString().replace(" liked", "");
-    } else {
-        currentButtonDivValue = currentButtonDivValue + 1;
-        buttonDiv.setAttribute("isLiked", "true");
-        buttonDiv.className = buttonDiv.className + " liked";
-    }
 
-    buttonDiv.setAttribute("ValueLike", currentButtonDivValue.toString());
+    //Note the order of className before the state change of isLiked, as in process of toggling.
+    buttonDiv.className = getButtonUpdatedClassName(buttonDiv);
+    buttonDiv.setAttribute("Value", getButtonValue(buttonDiv));
+    buttonDiv.setAttribute("isClicked",getButtonIsClickedValue(buttonDiv));
 
-    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("ValueLike"))
+    handleButtonInteraction(buttonDiv);
+
+    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
         .attr("trigger", "hover")
         .tooltip('show');
 
+}
+function getButtonValue(buttonDiv) {
+    if (buttonDiv.getAttribute("buttonType") === "Like") return getButtonLikeValue(buttonDiv);
+    else return getButtonToggleValue(buttonDiv);
+}
+function getButtonLikeValue(buttonDiv) {
+    var currentButtonValue = parseInt(buttonDiv.getAttribute("Value"));
+    if ((buttonDiv.getAttribute("isClicked") === "true") &&(buttonDiv.getAttribute("buttonType") === "Like")){
+        currentButtonValue = currentButtonValue - 1;
+        return currentButtonValue;
+    } else if((buttonDiv.getAttribute("isClicked") === "false") &&(buttonDiv.getAttribute("buttonType") === "Like")){
+        currentButtonValue = currentButtonValue + 1;
 
-    if (buttonDiv.hidden === false) showDiv(buttonDiv); //TODO Perhaps toggle boolean change button to dislike, or undo perhaps.
-    else showDiv(buttonDiv);
+        return currentButtonValue
+    }
 
+}
+function getButtonToggleValue(buttonDiv) {
+    var buttonValue = "";
+
+    if(buttonDiv.getAttribute("isClicked") === "true") buttonValue = "Hide " + buttonDiv.getAttribute("buttonType");
+    else buttonValue = "Show " + buttonDiv.getAttribute("buttonType");
+
+    return buttonValue.toString();
+}
+function getButtonIsClickedValue(buttonDiv) {
+    if(buttonDiv.getAttribute("isClicked") === "true") return "false";
+    else return "true";
+
+}
+function getButtonUpdatedClassName(buttonDiv) {
+    var buttonClassName = "";
+    if(buttonDiv.getAttribute("isClicked") === "true")  buttonClassName = buttonDiv.className.toString().replace(" clicked", "");
+    else buttonClassName = buttonDiv.className + " clicked";
+
+    return buttonClassName.toString();
+}
+
+function handleButtonInteraction(buttonDiv) {
+    if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction();
+    else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction();
+}
+
+function handleThreadInteraction() {
+    
+}
+function handleInteractivityInteraction() {
+    
 }
 
 function handleButtonHover(event) {
     var buttonDiv = document.getElementById(event.target.id.toString());
-    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("ValueLike"))
+    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
         .attr("trigger", "hover")
         .tooltip('show');
 
-    console.log(buttonDiv.getAttribute("ValueLike"));
+    console.log(buttonDiv.getAttribute("Value"));
 }
 
 function handleButtonUnHover(event) {
@@ -457,7 +522,9 @@ function addComment(textBoxDiv, textAreaText) {
 
     //Annoying to reuse have to put text into 2D array, maybe write new function.
     replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateButtonsForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Thread",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Interactivity",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("respect", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
@@ -482,30 +549,39 @@ function paragraphToggleHandler(event) {
 
     var parentEventDiv = document.getElementById(parentEventId.toString());
     //TODO Change second check for any of them still shown, hide them.
-    if (parentEventValue === "comment" && anyChildNodesShowing(parentEventDiv)) {
-        hideAllChildNodes(parentEventDiv);
+    if (parentEventValue === "comment" && anyChildNodesShowing(parentEventDiv)){
+        hideAllReplyChildNodes(parentEventDiv);
+    }
+    else if(parentEventValue === "comment" && !anyChildNodesShowing(parentEventDiv)){
+        showAllReplyChildNodes(parentEventDiv);
     }
     else if(parentEventValue === "comment") {
-        showAllChildNodes(parentEventDiv);
         toggleButtonDiv(eventId, parentEventId);
         toggleRespectSliderDiv(eventId, parentEventId);
         toggleRelevancySliderDiv(eventId, parentEventId);
         toggleTextArea(eventId, parentEventId);
     }
-    else if(parentEventValue === "reply") {
+    else if(parentEventValue === "reply" && anyChildNodesShowing(parentEventDiv)) {
         //Here we want if user clicks on individual reply to hide it's slider stuff.
         // In doing so may mean that comment won't be able to be toggled.
+        hideAllChildNodes(parentEventDiv);
         toggleButtonDiv(eventId, parentEventId);
         toggleRespectSliderDiv(eventId, parentEventId);
         toggleRelevancySliderDiv(eventId, parentEventId);
         toggleTextArea(eventId, parentEventId);
+    }
+    else if(parentEventDiv === "reply"){
+        showAllReplyChildNodes(parentEventDiv);
+        toggleButtonDiv(eventId, parentEventId);
+        toggleRespectSliderDiv(eventId, parentEventId);
+        toggleRelevancySliderDiv(eventId, parentEventId);
+        toggleTextArea(eventId, parentEventId);
+
     }
 }
 
 function toggleButtonDiv(eventId, parentEventId) {
     var btnElement = "btn" + parentEventId + "-" + eventId;
-    var btnWrapperElement = "btnWrapper" + parentEventId + "-" + eventId;
-    var btnWrapperDiv = document.getElementById(btnWrapperElement);
     var btnDiv = document.getElementById(btnElement);
 
     if (btnDiv.hidden === false) hideDiv(btnDiv);
