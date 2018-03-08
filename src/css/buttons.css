@@ -8,7 +8,7 @@ button:hover{
     opacity: 1.0;
 }
 
-.btnFor-li-id{
+.btnLikeFor-li-id{
     position: relative;
     display: inline-block;
     height: 1.7rem;
@@ -18,7 +18,7 @@ button:hover{
 
 
 }
-.btnAgainst-li-id{
+.btnLikeAgainst-li-id{
     position: relative;
     display: inline-block;
     height: 1.7rem;
@@ -28,6 +28,47 @@ button:hover{
 
 }
 
-.liked{
+.clicked{
     background: url("likedButton.png");
+}
+.btnInteractivityFor-li-id{
+    border: solid black;
+    border-width: 0 0.25rem 0.25rem 0;
+    padding: 0.25rem;
+
+}
+
+.btnThreadFor-li-id{
+    margin-right: 2%;
+    border: solid black;
+    border-width: 0 0.20rem 0.20rem 0;
+    padding: 0.20rem;
+
+
+
+}
+.btnThreadAgainst-li-id{
+    margin-right: 1%;
+    border: solid black;
+    border-width: 0 0.20rem 0.20rem 0;
+    padding: 0.20rem;
+
+
+
+}
+
+.btnInteractivityAgainst-li-id{
+    border: solid black;
+    border-width: 0 0.20rem 0.20rem 0;
+    padding: 0.20rem;
+}
+
+.up{
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.down {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
 }
