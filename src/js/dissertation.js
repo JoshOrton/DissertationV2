@@ -431,15 +431,48 @@ function getButtonUpdatedClassName(buttonDiv) {
 }
 
 function handleButtonInteraction(buttonDiv) {
-    if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction();
-    else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction();
+    if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction(buttonDiv);
+    else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction(buttonDiv);
 }
 
-function handleThreadInteraction() {
+function handleThreadInteraction(buttonDiv) {
+    var parentEventId = buttonDiv.parentNode.id;
+    var parentEventValue = buttonDiv.parentNode.value;
+
+    var parentEventDiv = document.getElementById(parentEventId.toString());
+    //TODO Change second check for any of them still shown, hide them.
+    if (anyChildNodesShowing(parentEventDiv)){
+        hideAllReplyChildNodes(parentEventDiv);
+    }
+    else if(!anyChildNodesShowing(parentEventDiv)){
+        showAllReplyChildNodes(parentEventDiv);
+    }
     
 }
-function handleInteractivityInteraction() {
-    
+function handleInteractivityInteraction(buttonDiv) {
+    var paragraphId = getRelatedParagraphId(buttonDiv);
+    var paragraphDivParentId = buttonDiv.parentNode.id;
+    var paragraphDivParentValue = buttonDiv.parentNode.value;
+
+    var paragraphDivParentDiv = document.getElementById(paragraphDivParentId);
+    //TODO Change second check for any of them still shown, hide them.
+
+    if(paragraphDivParentValue === "comment") {
+        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
+        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
+        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
+        toggleTextArea(paragraphId, paragraphDivParentId);
+    }
+    else if(paragraphDivParentValue === "reply"){
+        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
+        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
+        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
+        toggleTextArea(paragraphId, paragraphDivParentId);
+
+    }
+}
+function getRelatedParagraphId(buttonDiv) {
+    return buttonDiv.parentNode.childNodes[0].id;
 }
 
 function handleButtonHover(event) {
@@ -522,9 +555,9 @@ function addComment(textBoxDiv, textAreaText) {
 
     //Annoying to reuse have to put text into 2D array, maybe write new function.
     replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateButton("Thread",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateButton("Interactivity",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("respect", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
     replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
@@ -580,8 +613,8 @@ function paragraphToggleHandler(event) {
     }
 }
 
-function toggleButtonDiv(eventId, parentEventId) {
-    var btnElement = "btn" + parentEventId + "-" + eventId;
+function toggleButtonDiv(relatedParagraphId, parentEventId,buttonType) {
+    var btnElement = "btn" + buttonType + parentEventId + "-" + relatedParagraphId;
     var btnDiv = document.getElementById(btnElement);
 
     if (btnDiv.hidden === false) hideDiv(btnDiv);
@@ -589,12 +622,12 @@ function toggleButtonDiv(eventId, parentEventId) {
 
 }
 
-function toggleRespectSliderDiv(eventId, parentEventId) {
-    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + eventId;
+function toggleRespectSliderDiv(relatedparagraphId, parentEventId) {
+    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + relatedparagraphId;
     var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
-    var respectSliderValueElement = "respectSliderValue" + parentEventId + "-" + eventId;
+    var respectSliderValueElement = "respectSliderValue" + parentEventId + "-" + relatedparagraphId;
     var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
-    var respectSliderElement = "respectSlider" + parentEventId + "-" + eventId;
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + relatedparagraphId;
     var respectSliderDiv = document.getElementById(respectSliderElement);
 
     if (respectSliderDiv.hidden === false) {
