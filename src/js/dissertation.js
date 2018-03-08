@@ -197,9 +197,12 @@ function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue
 
 function getButtonClassName(parentNodeName, buttonType) {
     var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    var arrowPosition = "";
+    if(buttonType !== "Like") arrowPosition = " up"; //Again horrible hardcoding, and probably better to split into two functions throughout this, for another day.
     if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
 
-    return "btn" + buttonType + parentNodeName.substr(0, lengthOfClassName);
+
+    return "btn" + buttonType + parentNodeName.substr(0, lengthOfClassName) + arrowPosition;
 
 }
 
@@ -412,7 +415,7 @@ function getButtonLikeValue(buttonDiv) {
 function getButtonToggleValue(buttonDiv) {
     var buttonValue = "";
 
-    if(buttonDiv.getAttribute("isClicked") === "true") buttonValue = "Hide " + buttonDiv.getAttribute("buttonType");
+    if(buttonDiv.getAttribute("Value") === "Show " + buttonDiv.getAttribute("buttonType")) buttonValue = "Hide " + buttonDiv.getAttribute("buttonType");
     else buttonValue = "Show " + buttonDiv.getAttribute("buttonType");
 
     return buttonValue.toString();
@@ -422,11 +425,17 @@ function getButtonIsClickedValue(buttonDiv) {
     else return "true";
 
 }
+//TODO Split these functions into seperate ones, as currently doing two things.
 function getButtonUpdatedClassName(buttonDiv) {
     var buttonClassName = "";
-    if(buttonDiv.getAttribute("isClicked") === "true")  buttonClassName = buttonDiv.className.toString().replace(" clicked", "");
-    else buttonClassName = buttonDiv.className + " clicked";
-
+    if(buttonDiv.getAttribute("buttonType") === "Like") {
+        if (buttonDiv.getAttribute("isClicked") === "true") buttonClassName = buttonDiv.className.toString().replace(" clicked", "");
+        else buttonClassName = buttonDiv.className + " clicked";
+    } else{
+        if(buttonDiv.className.match("up")) buttonClassName = buttonDiv.className.toString().replace(" up", " down");
+        else if(buttonDiv.className.match("down")) buttonClassName = buttonDiv.className.toString().replace(" down", " up");
+        else buttonClassName = buttonDiv.className + " up";
+    }
     return buttonClassName.toString();
 }
 
@@ -573,46 +582,6 @@ function getReplyNumber(originalPost, numberOfPreviousReplies) {
 function getNumberOfPreviousReplies(originalPostId) {
     return $('[id^=' + originalPostId + ']').length;
 }
-
-function paragraphToggleHandler(event) {
-    var eventId = event.target.id;
-    var parentEvent = event.target.parentNode;
-    var parentEventId = parentEvent.id;
-    var parentEventValue = parentEvent.value;
-
-    var parentEventDiv = document.getElementById(parentEventId.toString());
-    //TODO Change second check for any of them still shown, hide them.
-    if (parentEventValue === "comment" && anyChildNodesShowing(parentEventDiv)){
-        hideAllReplyChildNodes(parentEventDiv);
-    }
-    else if(parentEventValue === "comment" && !anyChildNodesShowing(parentEventDiv)){
-        showAllReplyChildNodes(parentEventDiv);
-    }
-    else if(parentEventValue === "comment") {
-        toggleButtonDiv(eventId, parentEventId);
-        toggleRespectSliderDiv(eventId, parentEventId);
-        toggleRelevancySliderDiv(eventId, parentEventId);
-        toggleTextArea(eventId, parentEventId);
-    }
-    else if(parentEventValue === "reply" && anyChildNodesShowing(parentEventDiv)) {
-        //Here we want if user clicks on individual reply to hide it's slider stuff.
-        // In doing so may mean that comment won't be able to be toggled.
-        hideAllChildNodes(parentEventDiv);
-        toggleButtonDiv(eventId, parentEventId);
-        toggleRespectSliderDiv(eventId, parentEventId);
-        toggleRelevancySliderDiv(eventId, parentEventId);
-        toggleTextArea(eventId, parentEventId);
-    }
-    else if(parentEventDiv === "reply"){
-        showAllReplyChildNodes(parentEventDiv);
-        toggleButtonDiv(eventId, parentEventId);
-        toggleRespectSliderDiv(eventId, parentEventId);
-        toggleRelevancySliderDiv(eventId, parentEventId);
-        toggleTextArea(eventId, parentEventId);
-
-    }
-}
-
 function toggleButtonDiv(relatedParagraphId, parentEventId,buttonType) {
     var btnElement = "btn" + buttonType + parentEventId + "-" + relatedParagraphId;
     var btnDiv = document.getElementById(btnElement);
@@ -687,15 +656,4 @@ $(StatementListDiv).click(function (event) {
 
     emboldenEvent(event);
 
-});
-
-$(ForListDiv).click(function (event) {
-    //TODO Formats are not probably as nice, but change when crossing this brige.
-    var eventName = event.target.id.slice(0, event.target.id.length - 2);
-    if (eventName === "pArguments") paragraphToggleHandler(event);
-});
-
-$(AgainstListDiv).click(function (event) {
-    var eventName = event.target.id.slice(0, event.target.id.length - 2);
-    if (eventName === "pArguments") paragraphToggleHandler(event);
 });
