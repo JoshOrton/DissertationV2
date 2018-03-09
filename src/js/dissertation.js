@@ -342,13 +342,19 @@ function anyChildNodesShowing(div) {
 //We want all the div's to be hiddden
 function hideAllReplyChildNodes(div) {
     for (var i = 0; i < div.childElementCount; i++) {
-        if(div.childNodes[i].value === "reply") div.childNodes[i].hidden = true;
+        if(div.childNodes[i].value === "reply"){
+            div.childNodes[i].style.fontWeight = "";
+            div.childNodes[i].hidden = true;
+        }
     }
 }
 //We want all the divs' to be shown.
 function showAllReplyChildNodes(div) {
     for (var i = 0; i < div.childElementCount; i++) {
-        if(div.childNodes[i].value === "reply") div.childNodes[i].hidden = false;
+        if(div.childNodes[i].value === "reply") {
+            div.childNodes[i].hidden = false;
+            div.childNodes[i].style.fontWeight = "bold";
+        }
     }
 }
 //We want all the div's to be hiddden
