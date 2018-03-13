@@ -84,7 +84,7 @@
     width: 33%;
     height: 1.25rem;
     border: 0;
-    background: url('fistbump.png') no-repeat;
+    background: url(../img/fistbump.png) no-repeat;
     cursor: pointer;
 }
 
@@ -92,7 +92,7 @@
     width: 33%;
     height: 1.25rem;
     border: 0;
-    background: url('fistbump.png') no-repeat;
+    background: url(../img/fistbump.png) no-repeat;
     cursor: pointer;
 }
 
@@ -104,7 +104,7 @@
     width: 33%;
     height: 1.25rem;
     border: 0;
-    background: url('fistbump.png') no-repeat;
+    background: url(../img/fistbump.png) no-repeat;
     cursor: pointer;
 }
 
@@ -112,6 +112,6 @@
     width: 33%;
     height: 1.25rem;
     border: 0;
-    background: url('fistbump.png') no-repeat;
+    background: url(../img/fistbump.png) no-repeat;
     cursor: pointer;
 }

@@ -14,7 +14,7 @@ button:hover{
     height: 1.7rem;
     width: 1.6rem;
     margin-right: 2%;
-    background: url("likeButton.png");
+    background: url("../img/likeButton.png");
 
 
 }
@@ -24,12 +24,12 @@ button:hover{
     height: 1.7rem;
     width: 1.6rem;
     margin-right: 2%;
-    background: url("likeButton.png");
+    background: url("../img/likeButton.png");
 
 }
 
 .clicked{
-    background: url("likedButton.png");
+    background: url("../img/likedButton.png");
 }
 .btnInteractivityFor-li-id{
     border: solid black;
