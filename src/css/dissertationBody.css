@@ -10,3 +10,49 @@ body {
 .headingBold{
     font-weight: bold;
 }
+
+.hackthisHackBelowDEFOTODO{
+
+}
+@media only screen and (max-width: 450px) {
+
+    .headerText {
+        font-size: 1.8rem;
+    }
+
+}@media only screen and (max-width: 350px) {
+
+    .headerText {
+        font-size: 1.6rem;
+    }
+
+}
+@media only screen and (max-width: 300px) {
+
+    .headerText {
+        font-size: 1.2rem;
+    }
+
+}
+@media only screen and (max-width: 250px) {
+
+    .headerText{
+        font-size: 1.0rem;
+    }
+
+}
+@media only screen and (max-width: 200px) {
+
+    .headerText{
+        font-size: 0.8rem;
+    }
+
+}
+
+@media only screen and (max-width: 160px) {
+
+    .headerText {
+        font-size: 0.2em;
+    }
+
+}
