@@ -21,12 +21,12 @@ body {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
-    color: royalblue;
+    color: white;
 }
 
 .text-vertical-center h1 {
-    font-size: 4.5em;
-    font-weight: 900;
+    font-size: 7em;
+    font-weight: 700;
     margin: 0;
     padding: 0;
 }
