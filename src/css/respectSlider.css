@@ -17,7 +17,7 @@
 .respectSliderFor-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 6rem;
+    width: 5.5rem;
     height: 1.25rem;
     background: #d3d3d3;
     outline: none;
@@ -29,7 +29,7 @@
 .respectSliderAgainst-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 6rem;
+    width: 5.5rem;
     height: 1.25rem;
     background: #d3d3d3;
     outline: none;

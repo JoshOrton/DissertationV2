@@ -190,7 +190,7 @@ function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue
     wrapper.hidden = hiddenValue;
 
     wrapper.appendChild(populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j));
-    wrapper.appendChild(populateSliderValueElement(currentNodeName, parentNodeName, j));
+ //   wrapper.appendChild(populateSliderValueElement(currentNodeName, parentNodeName, j));
 
     return wrapper;
 }
@@ -267,11 +267,11 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
 
 
 function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenValue) {
-    var sliderElementValue = document.createElement('p');
+    var sliderElementValue = document.createElement('div');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
     var sliderValueClass = getSliderValueClassName(currentNodeName, parentNodeName);
 
-    sliderElementValue.hidden = hiddenValue;
+    sliderElementValue.hidden = true;
     sliderElementValue.value = "50%";
     sliderElementValue.id = sliderValueId;
     sliderElementValue.className = sliderValueClass;
@@ -400,7 +400,6 @@ function handleButtonToggle(event) {
     $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
         .attr("trigger", "hover")
         .tooltip('show');
-
 }
 function getButtonValue(buttonDiv) {
     if (buttonDiv.getAttribute("buttonType") === "Like") return getButtonLikeValue(buttonDiv);
@@ -510,27 +509,37 @@ function handleSliderChange(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
     //sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
-    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
-    sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-    sliderElement.parentNode.childNodes[1].hidden = false;
+   // sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
+    //sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
+  //  sliderElement.parentNode.childNodes[1].hidden = false;
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('show');
 
 }
 
 function handleSliderHover(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
-    sliderElement.parentNode.childNodes[1].hidden = false;
+    //sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
+   // sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
+    //sliderElement.parentNode.childNodes[1].hidden = false;
+
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('show');
 
 }
 
 function handleSliderLeave(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-    sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id override";
-    sliderElement.parentNode.childNodes[1].hidden = false;
+   // sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
+    //sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id override";
+    //sliderElement.parentNode.childNodes[1].hidden = false;
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('hide');
 
 }
 
@@ -607,12 +616,12 @@ function toggleRespectSliderDiv(relatedparagraphId, parentEventId) {
 
     if (respectSliderDiv.hidden === false) {
         hideDiv(respectSliderDiv);
-        hideDiv(respectSliderValueDiv);
+        //hideDiv(respectSliderValueDiv);
         hideDiv(respectSliderWrapperDiv);
     }
     else {
         showDiv(respectSliderDiv);
-        showDiv(respectSliderValueDiv);
+        //showDiv(respectSliderValueDiv);
         showDiv(respectSliderWrapperDiv);
     }
 }
@@ -641,12 +650,12 @@ function toggleRelevancySliderDiv(eventId, parentEventId) {
     var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
     if (relevancySliderDiv.hidden === false) {
         hideDiv(relevancySliderDiv);
-        hideDiv(relevancySliderValueDiv);
+        //hideDiv(relevancySliderValueDiv);
         hideDiv(relevancySliderWrapperDiv);
     }
     else {
         showDiv(relevancySliderDiv);
-        showDiv(relevancySliderValueDiv);
+        //showDiv(relevancySliderValueDiv);
         showDiv(relevancySliderWrapperDiv);
     }
 }

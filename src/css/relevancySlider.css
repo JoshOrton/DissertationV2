@@ -14,7 +14,7 @@
 .relevancySliderFor-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 6rem;
+    width: 5.5rem;
     height: 1.25rem;
     border-radius: 5px;
     background: #d3d3d3;
@@ -28,7 +28,7 @@
 .relevancySliderAgainst-li-id{
     display: inline-block;
     -webkit-appearance: none;
-    width: 6rem;
+    width: 5.5rem;
     height: 1.25rem;
     border-radius: 5px;
     background: #d3d3d3;
@@ -55,18 +55,18 @@
 .relevancySliderFor-li-id::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 30%;
+    width: 28%;
     height: 1.25rem;
     border: 0;
-    background: url('../img/relevancy.png') no-repeat;
+    background: url(../img/relevancy.png) no-repeat;
     cursor: pointer;
 }
 
 .relevancySliderFor-li-id::-moz-range-thumb {
-    width: 30%;
+    width: 28%;
     height: 1.25rem;
     border: 0;
-    background: url('../img/relevancy.png') no-repeat ;
+    background: url(../img/relevancy.png) no-repeat ;
     cursor: pointer;
 }
 
@@ -75,17 +75,17 @@
 .relevancySliderAgainst-li-id::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 30%;
+    width: 28%;
     height: 1.25rem;
     border: 0;
-    background: url('../img/relevancy.png') no-repeat;
+    background: url(../img/relevancy.png) no-repeat;
     cursor: pointer;
 }
 
 .relevancySliderAgainst-li-id::-moz-range-thumb {
-    width: 30%;
+    width: 28%;
     height: 1.25rem;
     border: 0;
-    background: url('../img/relevancy.png') no-repeat ;
+    background: url(../img/relevancy.png) no-repeat ;
     cursor: pointer;
 }

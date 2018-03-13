@@ -32,6 +32,7 @@ button:hover{
     background: url("../img/likedButton.png");
 }
 .btnInteractivityFor-li-id{
+    margin-right: 2%;
     border: solid black;
     border-width: 0 0.25rem 0.25rem 0;
     padding: 0.25rem;
@@ -41,26 +42,24 @@ button:hover{
 .btnThreadFor-li-id{
     margin-right: 2%;
     border: solid black;
-    border-width: 0 0.20rem 0.20rem 0;
-    padding: 0.20rem;
-
+    border-width: 0 0.25rem 0.25rem 0;
+    padding: 0.25rem;
 
 
 }
 .btnThreadAgainst-li-id{
-    margin-right: 1%;
+    margin-right: 2%;
+    margin-bottom: 1%;
     border: solid black;
-    border-width: 0 0.20rem 0.20rem 0;
-    padding: 0.20rem;
-
-
+    border-width: 0 0.25rem 0.25rem 0;
+    padding: 0.25rem;
 
 }
-
 .btnInteractivityAgainst-li-id{
+    margin-right: 2%;
     border: solid black;
-    border-width: 0 0.20rem 0.20rem 0;
-    padding: 0.20rem;
+    border-width: 0 0.25rem 0.25rem 0;
+    padding: 0.25rem;
 }
 
 .up{
