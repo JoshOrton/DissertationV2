@@ -9,7 +9,7 @@
 
 html,
 body {
-    width: 98%;
+    width: 100%;
     height: 100%;
 }
 
@@ -21,16 +21,14 @@ body {
     display: table-cell;
     text-align: center;
     vertical-align: middle;
+    color: royalblue;
 }
 
 .text-vertical-center h1 {
     font-size: 4.5em;
-    font-weight: 700;
+    font-weight: 900;
     margin: 0;
     padding: 0;
-}
-.headingBold{
-    font-weight: bold;
 }
 
 

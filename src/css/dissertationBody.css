@@ -1,0 +1,12 @@
+html,
+body {
+    width: 98%;
+    height: 100%;
+}
+
+body {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.headingBold{
+    font-weight: bold;
+}
