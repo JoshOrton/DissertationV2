@@ -4,6 +4,8 @@
 //TODO NExt iteration, Twitter, Sources, and
 //TODO Add source statements?
 //TODO Add Twitter API somehow.
+//TODO Perhaps add in mobile first tech, no hover elements when mobile is selected.
+//TODO INTERVIEWS!!!!!! FIRST PRIORITY MUST BE!!!
 
 
 var ForListDiv = document.getElementById('ForListOL');
@@ -457,9 +459,12 @@ function handleThreadInteraction(buttonDiv) {
     //TODO Change second check for any of them still shown, hide them.
     if (anyChildNodesShowing(parentEventDiv)){
         hideAllReplyChildNodes(parentEventDiv);
+        parentEventDiv.style.fontWeight = "";
+
     }
     else if(!anyChildNodesShowing(parentEventDiv)){
         showAllReplyChildNodes(parentEventDiv);
+        parentEventDiv.style.fontWeight = "bold";
     }
     
 }
