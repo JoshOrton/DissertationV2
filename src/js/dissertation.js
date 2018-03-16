@@ -1,17 +1,13 @@
 //TODO Cleanup Code.
-//TODO Perhpas change CSS to make it clearer.
-//TODO Perhaps toggle first comment would collapse all replies.
-//TODO NExt iteration, Twitter, Sources, and
-//TODO Add source statements?
 //TODO Add Twitter API somehow.
 //TODO Perhaps add in mobile first tech, no hover elements when mobile is selected.
 //TODO INTERVIEWS!!!!!! FIRST PRIORITY MUST BE!!!
 
+//TODO Add source statements?
 
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
-
 //TODO Perhaps grab this dynamically using AJAX request to Java backend, or through Twitter API?
 var statementArray = ['Brexit is a bad idea',
     'Immigration is ruining our culture',
@@ -65,6 +61,7 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue) {
         var paragraphItem = document.createElement('p');
         listItem.id = 'li-id-' + i;
         listItem.hidden = hiddenValue;
+        listItem.setAttribute("bothSidesInteracted", "false");
         paragraphItem.innerHTML = arr[i];
         paragraphItem.id = "p-" + i;
         listItem.appendChild(paragraphItem);
@@ -180,8 +177,33 @@ function populateArgumentReply(textAreaText, previousReplies) {
     var textItem = document.createElement('p');
     textItem.id = 'pArguments-' + previousReplies;
     textItem.className = "pArgumentStyle";
-    textItem.innerHTML = textAreaText.toString();
+    textItem.innerHTML = getTextExcludingSource(textAreaText);
     return textItem;
+}
+function populateSourceText(textAreaText, previousReplies) {
+    var textItem = document.createElement('p');
+    var anchorElement = document.createElement('a');
+    var sourceLink = getSourceLink(textAreaText);
+    anchorElement.href = sourceLink;
+    anchorElement.innerHTML = sourceLink;
+    textItem.id = 'pSource-' + previousReplies;
+    textItem.className = "pSourceStyle";
+    //textItem.innerHTML = sourceLink;
+    textItem.appendChild(anchorElement);
+    return textItem;
+}
+function getSourceLink(textAreaText) {
+    var indexOfStartOfSource = textAreaText.indexOf("/source=")+9;
+    var sourceLink = textAreaText.substring(indexOfStartOfSource, textAreaText.length-1).toString();
+    return sourceLink;
+}
+function getTextExcludingSource(textAreaText) {
+    if(isSourceIncluded(textAreaText)) {
+        var sourceTag = "/source";
+        var indexOfStartOfSource = textAreaText.indexOf(sourceTag);
+        textAreaText = textAreaText.substring(0, indexOfStartOfSource).toString();
+    }
+    return textAreaText.toString();
 }
 
 function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue, j) {
@@ -261,7 +283,7 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
     sliderElement.addEventListener("change", handleSliderChange);
     sliderElement.addEventListener("input", handleSliderChange);
     sliderElement.addEventListener("mouseleave", handleSliderLeave);
-    sliderElement.addEventListener("mouseover", handleSliderHover);
+    //sliderElement.addEventListener("mouseover", handleSliderHover);
 
     return sliderElement;
 
@@ -397,7 +419,7 @@ function handleButtonToggle(event) {
     buttonDiv.setAttribute("Value", getButtonValue(buttonDiv));
     buttonDiv.setAttribute("isClicked",getButtonIsClickedValue(buttonDiv));
 
-    handleButtonInteraction(buttonDiv);
+    handleButtonInteraction(buttonDiv, event);
 
     $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
         .attr("trigger", "hover")
@@ -446,9 +468,11 @@ function getButtonUpdatedClassName(buttonDiv) {
     return buttonClassName.toString();
 }
 
-function handleButtonInteraction(buttonDiv) {
+function handleButtonInteraction(buttonDiv,event) {
     if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction(buttonDiv);
     else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction(buttonDiv);
+    else setUserInteracted(event);
+
 }
 
 function handleThreadInteraction(buttonDiv) {
@@ -512,6 +536,7 @@ function handleButtonUnHover(event) {
 
 function handleSliderChange(event) {
     console.log(event.target.id);
+    setUserInteracted(event);
     var sliderElement = document.getElementById(event.target.id.toString());
     //sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
    // sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
@@ -557,7 +582,44 @@ function handleSubmitTextArea(event) {
     var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
     var textAreaText = textAreaElement.value.toString();
     clearTextBox(textAreaElement, textAreaText);
-    addComment(textAreaElement, textAreaText);
+    //TODO fix this remember
+    if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "" || true) {
+        //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
+        addComment(textAreaElement, textAreaText);
+    }
+    else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
+    else alert("You must interact (read, like or vote) with both sides before commenting");
+    //TODO add another submit, wherby add sources.
+}
+
+function setUserInteracted(event) {
+   // Always returns a number, returns 0 if not true, and anything else if true.
+    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
+    //Therefore hence the bitwise inverse is zero.
+   if(~event.target.id.indexOf("For")){
+       setInteractedEvent(event, "forinteracted");
+   }else if(~event.target.id.indexOf("Against")){
+       setInteractedEvent(event,"againstinteracted");
+   }
+}
+
+function setInteractedEvent(event, interactedEventId){
+    //Replaces all non-digits with blank, up until the first number, then takes that one.
+    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
+    console.log(event.target.id);
+    setStatementInteracted(statementValue, interactedEventId);
+}
+
+function setStatementInteracted(statementValue, interactedSide){
+    var statementListDiv = document.getElementById("StatementListOL");
+    statementListDiv.childNodes[statementValue].setAttribute(interactedSide, "true");
+}
+
+function hasUserInteractedWithBothSides(event) {
+    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
+    var statementListDiv = document.getElementById("StatementListOL");
+
+    return statementListDiv.childNodes[statementValue].getAttribute("forinteracted") === "true" && statementListDiv.childNodes[statementValue].getAttribute("againstinteracted") === "true";
 
 }
 
@@ -582,8 +644,12 @@ function addComment(textBoxDiv, textAreaText) {
     replyWrapper.value = "reply";
     replyWrapper.hidden = !hiddenValue;
 
-    //Annoying to reuse have to put text into 2D array, maybe write new function.
+    //Sad that inside this we do the below check as well, but maybe saves us creating two functions, which actually wouldn't be that bad.
     replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
+
+    if(isSourceIncluded(textAreaText)) {
+        replyWrapper.appendChild(populateSourceText(textAreaText, numberOfPreviousReplies));
+    }
     replyWrapper.appendChild(populateButton("Thread",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateButton("Interactivity",replyWrapper.id, numberOfPreviousReplies));
     replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
@@ -593,6 +659,13 @@ function addComment(textBoxDiv, textAreaText) {
 
     // Inside wrapperDiv for original comment.
     textBoxDiv.parentNode.parentNode.appendChild(replyWrapper);
+}
+function isSourceIncluded(textAreaText) {
+    // Always returns a number, returns 0 if not true, and anything else if true.
+    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
+    //Therefore hence the bitwise inverse is zero.
+    if(~textAreaText.indexOf("\source=") || ~textAreaText.indexOf("\Source=")) return true;
+    return false;
 }
 
 function getReplyNumber(originalPost, numberOfPreviousReplies) {
