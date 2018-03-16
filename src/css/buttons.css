@@ -32,42 +32,43 @@ button:hover{
     background: url("../img/likedButton.png");
 }
 .btnInteractivityFor-li-id{
+    position: relative;
+    display: inline-block;
+    height: 1.7rem;
+    width: 1.6rem;
     margin-right: 2%;
-    border: solid black;
-    border-width: 0 0.25rem 0.25rem 0;
-    padding: 0.25rem;
 
 }
 
 .btnThreadFor-li-id{
+    position: relative;
+    display: inline-block;
+    height: 1.7rem;
+    width: 1.6rem;
     margin-right: 2%;
-    border: solid black;
-    border-width: 0 0.25rem 0.25rem 0;
-    padding: 0.25rem;
-
 
 }
 .btnThreadAgainst-li-id{
+    position: relative;
+    display: inline-block;
+    height: 1.7rem;
+    width: 1.6rem;
     margin-right: 2%;
-    margin-bottom: 1%;
-    border: solid black;
-    border-width: 0 0.25rem 0.25rem 0;
-    padding: 0.25rem;
 
 }
 .btnInteractivityAgainst-li-id{
+    position: relative;
+    display: inline-block;
+    height: 1.7rem;
+    width: 1.6rem;
     margin-right: 2%;
-    border: solid black;
-    border-width: 0 0.25rem 0.25rem 0;
-    padding: 0.25rem;
 }
 
 .up{
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
+    background: url("../img/upArrowBigger.png");
 }
 
 .down {
-    transform: rotate(-135deg);
-    -webkit-transform: rotate(-135deg);
+    background: url("../img/downArrowBigger.png");
+
 }
