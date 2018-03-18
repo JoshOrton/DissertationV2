@@ -65,10 +65,10 @@ button:hover{
 }
 
 .up{
-    background: url("../img/upArrowBigger.png");
+    background: url("../img/upArrow.png");
 }
 
 .down {
-    background: url("../img/downArrowBigger.png");
+    background: url("../img/downArrow.png");
 
 }
