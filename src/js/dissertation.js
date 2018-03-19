@@ -1,14 +1,28 @@
 //TODO Cleanup Code.
-//TODO Add Twitter API somehow.
 //TODO Perhaps add in mobile first tech, no hover elements when mobile is selected.
 //TODO INTERVIEWS!!!!!! FIRST PRIORITY MUST BE!!!
+//TODO GIVE myself two days, finish up with css moving, and perhaps add Twitter API/ wordart for statements.
+//TODO Then maybe look into changing from hardcoded JS to AJAX and JAva fetching from Database.
 
-//TODO Add source statements?
+//Example:
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "http://rest-service.guides.spring.io/greeting"
+    }).then(function(data) {
+        $('.greeting-id').append(data.id);
+        $('.greeting-content').append(data.content);
+    });
+});
+
 
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
-//TODO Perhaps grab this dynamically using AJAX request to Java backend, or through Twitter API?
+
+
+
+//TODO Perhaps grab this dynamically using AJAX request to Java backend?
 var statementArray = ['Brexit is a bad idea',
     'Immigration is ruining our culture',
     'I am so proud of our queen',
@@ -37,7 +51,7 @@ populateArgumentsAsUnorderedList(AgainstListDiv, againstStatements, true);
 populateArgumentsAsUnorderedList(ForListDiv, forStatements, true);
 
 
-//TODO Maybe don't need array index vs length check.
+//TODO Change this surely to Java controlled.
 function populateReasoningStatementArray(statementArray, unformattedArgumentArray) {
     var newList = [];
     var reasoningStatementList = [];
@@ -62,6 +76,7 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue) {
         listItem.id = 'li-id-' + i;
         listItem.hidden = hiddenValue;
         listItem.setAttribute("bothSidesInteracted", "false");
+        //Grab this dynamically.
         paragraphItem.innerHTML = arr[i];
         paragraphItem.id = "p-" + i;
         listItem.appendChild(paragraphItem);
