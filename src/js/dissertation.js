@@ -1,24 +1,20 @@
 //TODO Cleanup Code.
-//TODO Perhaps add in mobile first tech, no hover elements when mobile is selected.
 //TODO INTERVIEWS!!!!!! FIRST PRIORITY MUST BE!!!
-//TODO GIVE myself two days, finish up with css moving, and perhaps add Twitter API/ wordart for statements.
-//TODO Then maybe look into changing from hardcoded JS to AJAX and JAva fetching from Database.
-
-//Example:
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: "http://rest-service.guides.spring.io/greeting"
-    }).then(function(data) {
-        $('.greeting-id').append(data.id);
-        $('.greeting-content').append(data.content);
-    });
-});
+//TODO Setup Post and Get for Databases to grab Values.
+//TODO GIVE myself until end of Wed, finish up with css moving of statement source, add wordart for statements.
+//TODO Hide and show Pros and Cons following a click on the statement.
+//TODO Email Stephen Payne about articles.
+//TODO Conduct emails.
 
 
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
+var backToStatementsButton = document.getElementById('backToStatements');
+
+var ForListDivWrapper = document.getElementById('ForListWrapper');
+var AgainstListDivWrapper = document.getElementById('AgainstListWrapper');
+var StatementListDivWrapper = document.getElementById('StatementListWrapper');
 
 
 
@@ -50,6 +46,7 @@ populateStatementsAsUnorderedList(StatementListDiv, statementArray, false);
 populateArgumentsAsUnorderedList(AgainstListDiv, againstStatements, true);
 populateArgumentsAsUnorderedList(ForListDiv, forStatements, true);
 
+populateWordCloud();
 
 //TODO Change this surely to Java controlled.
 function populateReasoningStatementArray(statementArray, unformattedArgumentArray) {
@@ -78,7 +75,7 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue) {
         listItem.setAttribute("bothSidesInteracted", "false");
         //Grab this dynamically.
         paragraphItem.innerHTML = arr[i];
-        paragraphItem.id = "p-" + i;
+        paragraphItem.id = "li-id-" + i;
         listItem.appendChild(paragraphItem);
         div.appendChild(listItem);
     }
@@ -122,6 +119,21 @@ function populateArgumentContent(originalPost, statementIndex, argumentIndex, ar
 
     return replyWrapper;
 }
+function populateWordCloud() {
+    ForListDivWrapper.hidden = "true";
+    AgainstListDivWrapper.hidden = "true";
+
+    var list=[
+        ['Brexit is a bad idea',48],
+        ['Immigration is ruining our culture', 20],
+        ['I am so proud of our Queen', 25],
+        ['There should be no privacy, if it means catching terrorists', 24],
+        ['Global warming is our fault', 24],
+        ['I should be able to eat whatever animal I want.', 15]
+    ];
+    WordCloud(document.getElementById('StatementListOL'), {list: list});
+}
+
 
 function showDiv(div) {
     div.hidden = false;
@@ -420,7 +432,7 @@ function emboldenEvent(event) {
 
 function deBoldAllChildNodes(StatementListDiv) {
     for (var i = 0; i < StatementListDiv.childElementCount; i++) {
-        StatementListDiv.childNodes[i].childNodes[0].style.fontWeight = "";
+        //StatementListDiv.childNodes[i].childNodes[0].style.fontWeight = "";
     }
 
 }
@@ -604,8 +616,8 @@ function handleSubmitTextArea(event) {
     }
     else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
     else alert("You must interact (read, like or vote) with both sides before commenting");
-    //TODO add another submit, wherby add sources.
 }
+
 
 function setUserInteracted(event) {
    // Always returns a number, returns 0 if not true, and anything else if true.
@@ -754,14 +766,38 @@ function toggleRelevancySliderDiv(eventId, parentEventId) {
 }
 
 $(StatementListDiv).click(function (event) {
-    var statementId = event.target.parentNode.id.replace("li-id-", "");
+    var statementId = event.target.id.replace("li-id-", "");
     hideAllChildNodes(ForListDiv);
     hideAllChildNodes(AgainstListDiv);
+    hideAllChildNodes(StatementListDiv);
+
+    hideDiv(ForListDivWrapper);
+    hideDiv(AgainstListDivWrapper);
+    hideDiv(StatementListDivWrapper);
+    showDiv(backToStatementsButton);
+
     deBoldAllChildNodes(StatementListDiv);
 
     showDivChildNode(ForListDiv, statementId);
     showDivChildNode(AgainstListDiv, statementId);
+    showDiv(ForListDivWrapper);
+    showDiv(AgainstListDivWrapper);
+    showDiv(backToStatementsButton);
 
     emboldenEvent(event);
 
+});
+
+$(backToStatementsButton).click(function (event) {
+    hideAllChildNodes(ForListDiv);
+    hideAllChildNodes(AgainstListDiv);
+    hideAllChildNodes(StatementListDiv);
+
+    hideDiv(ForListDivWrapper);
+    hideDiv(AgainstListDivWrapper);
+    hideDiv(StatementListDivWrapper);
+    hideDiv(backToStatementsButton);
+
+    showDiv(StatementListDivWrapper);
+    showAllChildNodes(StatementListDiv);
 });

@@ -5,29 +5,29 @@
 }
 
 .middle-column-header-text{
-    text-align: center;
-    border-bottom: inherit;
     background-color: lightblue;
+}
+
+.titleHeading{
+
 }
 
 .right-column-header-text{
     border-bottom: inherit;
     text-align: center;
-
 }
-
-
 
 .verticalLineFor {
     border: solid black;
     background-color: palegreen;
 }
 .verticalLineStatement {
+    text-align: center;
     border: solid black;
     background-color: lightblue;
 }
 .verticalLineAgainst {
     border: solid black;
-
     background-color: palegreen;
+
 }
