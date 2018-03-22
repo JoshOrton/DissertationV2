@@ -34,23 +34,26 @@
     <div class="backToStatementsWrapper">
         <button type="button" class="btn btn-primary" id="backToStatements" hidden>< Back to Statements</button>
     </div>
-    <div class="container-fluid titleHeading" id="titleHeading">
-            <h1 class="headerText" align="center"><span class ="headingBold">Pro</span>gressive<span class ="headingBold">Con</span>versing</h1>
+    <div class="container-fluid" id="titleHeading">
+            <h1 class="headerText titleText statementsPage" align="center"><span class ="headingBold">Pro</span>gressive<span class ="headingBold">Con</span>versing</h1>
         </div>
 
 
 <section container-fluid>
+    <div class="col-xs col-sm col-md col-lg verticalLineStatement" id="StatementListWrapper">
+        <div class="page-header">
+            <h1 class="middle-column-header-text" id="headerStatement">Statements</h1>
+        </div>
+        <p class="middle-column-p-text" id="selectedStatementText"></p>
+        <div class="StatementList">
+            <ol id="StatementListOL" style="list-style: none"></ol>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs col-sm col-md col-lg verticalLineFor" id="ForListWrapper">
             <h1 class="left-column-header-text  ">Pros</h1>
             <div id="ForList">
                 <ol id="ForListOL" style="list-style: none"></ol>
-            </div>
-        </div>
-        <div class="col-xs col-sm col-md col-lg verticalLineStatement" id="StatementListWrapper">
-            <h1 class="middle-column-header-text">Statements</h1>
-            <div class="StatementList">
-                <ol id="StatementListOL" style="list-style: none"></ol>
             </div>
         </div>
         <div class="col-xs col-sm col-md col-lg verticalLineAgainst" id="AgainstListWrapper">

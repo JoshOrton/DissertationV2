@@ -8,11 +8,13 @@ button:hover{
     opacity: 1.0;
 }
 
-.backToStatementsButton{
-    height: 1.7rem;
-    width: 2rem;
-    margin-right: 2%;
-    display: inline-block;
+.backToStatements{
+
+}
+.backToStatementsWrapper{
+
+    margin-left: 1%;
+    margin-top: 2%;
 }
 
 .btnLikeFor-li-id{

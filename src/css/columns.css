@@ -6,10 +6,20 @@
 
 .middle-column-header-text{
     background-color: lightblue;
+    text-align: center;
+    border-bottom: solid black;
+}
+.middle-column-p-text{
+    text-align: center;
 }
 
-.titleHeading{
-
+.titleText{
+    font-size: 3rem;
+    margin-top: -3%;
+    margin-bottom: 2%;
+}
+.statementsPage{
+    margin-top: 2%;
 }
 
 .right-column-header-text{
@@ -25,6 +35,7 @@
     text-align: center;
     border: solid black;
     background-color: lightblue;
+    display: block;
 }
 .verticalLineAgainst {
     border: solid black;
