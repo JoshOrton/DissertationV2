@@ -7,7 +7,9 @@ Start Bootstrap is based on the [Bootstrap](http://getbootstrap.com/) framework 
 
 WordCloud is library based on the HTML5 Word Cloud, that I used to generate the Statement
 Library was created by [Tim Dream](https://github.com/timdream/wordcloud2.js) with help from Chad Jensen.
+Josh Orton, me, created pretty much everything else.
 ## Copyright and License
 
 Copyright 2013-2017 Blackrock Digital LLC. Code released under the [MIT](https://github.com/BlackrockDigital/startbootstrap-stylish-portfolio/blob/gh-pages/LICENSE) license.
+
 Copyright 2011 - 2013 Tim Chien Released under the [MIT license] http://timdream.org/wordcloud2.js/
