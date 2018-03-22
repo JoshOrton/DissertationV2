@@ -8,6 +8,15 @@ button:hover{
     opacity: 1.0;
 }
 
+.backToStatements{
+
+}
+.backToStatementsWrapper{
+
+    margin-left: 1%;
+    margin-top: 2%;
+}
+
 .btnLikeFor-li-id{
     position: relative;
     display: inline-block;

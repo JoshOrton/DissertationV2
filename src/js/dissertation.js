@@ -1,28 +1,23 @@
-//TODO Cleanup Code.
-//TODO Perhaps add in mobile first tech, no hover elements when mobile is selected.
-//TODO INTERVIEWS!!!!!! FIRST PRIORITY MUST BE!!!
-//TODO GIVE myself two days, finish up with css moving, and perhaps add Twitter API/ wordart for statements.
-//TODO Then maybe look into changing from hardcoded JS to AJAX and JAva fetching from Database.
 
-//Example:
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: "http://rest-service.guides.spring.io/greeting"
-    }).then(function(data) {
-        $('.greeting-id').append(data.id);
-        $('.greeting-content').append(data.content);
-    });
-});
+//TODO Future Work: Setup Post and Get for Databases to grab Values using AJAX requests.
+//TODO            : Fade in and out transition between Statements and Pros and Cons
+//TODO            : Add filtering on the WordCloud, making it clear what size represents.
+
 
 
 var ForListDiv = document.getElementById('ForListOL');
 var StatementListDiv = document.getElementById('StatementListOL');
 var AgainstListDiv = document.getElementById('AgainstListOL');
+var backToStatementsButton = document.getElementById('backToStatements');
+
+var ForListDivWrapper = document.getElementById('ForListWrapper');
+var AgainstListDivWrapper = document.getElementById('AgainstListWrapper');
+var StatementListDivWrapper = document.getElementById('StatementListWrapper');
 
 
 
-//TODO Perhaps grab this dynamically using AJAX request to Java backend?
+//TODO Grab this dynamically using AJAX request to Java backend? Rather than Hardcoded.
+//TODO For now as won't change user studies leave for later date.
 var statementArray = ['Brexit is a bad idea',
     'Immigration is ruining our culture',
     'I am so proud of our queen',
@@ -41,17 +36,21 @@ var unformattedAgainstArguments = ['Brexit is a bad idea', 'Disagree as means we
     'There should be no privacy, if it means catching terrorists', 'Privacy is our right, it should not be thrown away',
     'Global warming is our fault', 'Rubbish, scientists just trying to earn a big grant',
     'I should be able to eat whatever animal I want.', 'Horrible, we share this planet with them, we are no more important than them.'];
+function initialiseWebPageContent() {
+    var againstStatements = populateReasoningStatementArray(statementArray, unformattedAgainstArguments);
+    var forStatements = populateReasoningStatementArray(statementArray, unformattedForArguments);
 
-var againstStatements = populateReasoningStatementArray(statementArray, unformattedAgainstArguments);
-var forStatements = populateReasoningStatementArray(statementArray, unformattedForArguments);
+    populateStatementsAsUnorderedList(StatementListDiv, statementArray, false);
 
-populateStatementsAsUnorderedList(StatementListDiv, statementArray, false);
+    populateArgumentsAsUnorderedList(AgainstListDiv, againstStatements, true);
+    populateArgumentsAsUnorderedList(ForListDiv, forStatements, true);
 
-populateArgumentsAsUnorderedList(AgainstListDiv, againstStatements, true);
-populateArgumentsAsUnorderedList(ForListDiv, forStatements, true);
+    populateWordCloud();
+}
 
 
-//TODO Change this surely to Java controlled.
+
+//TODO Change this surely to make an AJAX call to a Java function to handle this on server rather than client side.
 function populateReasoningStatementArray(statementArray, unformattedArgumentArray) {
     var newList = [];
     var reasoningStatementList = [];
@@ -78,18 +77,14 @@ function populateStatementsAsUnorderedList(div, arr, hiddenValue) {
         listItem.setAttribute("bothSidesInteracted", "false");
         //Grab this dynamically.
         paragraphItem.innerHTML = arr[i];
-        paragraphItem.id = "p-" + i;
+        paragraphItem.id = "li-id-" + i;
         listItem.appendChild(paragraphItem);
         div.appendChild(listItem);
     }
 }
 
 function populateArgumentsAsUnorderedList(div, arr, hiddenValue) {
-    //Do not need one for isAgaisntArguments, as by definition if it is not for this then must be agaisnt.
-    //! converts from non boolean to Boolean
-    // ! then inverts it.
-    //TODO MAy need to change this.
-    var isForArguments = !div.id.match("AgainstListOL");
+        var isForArguments = !div.id.match("AgainstListOL");
 
     for (var statementIndex = 0; statementIndex < arr.length; statementIndex++) {
         var listItem = document.createElement('li');
@@ -101,7 +96,6 @@ function populateArgumentsAsUnorderedList(div, arr, hiddenValue) {
             wrapperListItem.id = getWrapperListItemId(listItem, statementIndex, argumentIndex);
             wrapperListItem.appendChild(populateArgumentContent(wrapperListItem, statementIndex, argumentIndex, arr, hiddenValue));
             listItem.appendChild(wrapperListItem);
-            //TODO Add source submit text and css.
         }
         div.appendChild(listItem);
     }
@@ -123,31 +117,21 @@ function populateArgumentContent(originalPost, statementIndex, argumentIndex, ar
     return replyWrapper;
 }
 
-function showDiv(div) {
-    div.hidden = false;
+function populateWordCloud() {
+    ForListDivWrapper.hidden = "true";
+    AgainstListDivWrapper.hidden = "true";
+
+    var list=[
+        ['Brexit is a bad idea',48],
+        ['Immigration is ruining our culture', 20],
+        ['I am so proud of our Queen', 25],
+        ['There should be no privacy, if it means catching terrorists', 24],
+        ['Global warming is our fault', 24],
+        ['I should be able to eat whatever animal I want.', 15]
+    ];
+    WordCloud(document.getElementById('StatementListOL'), {list: list});
 }
 
-function hideDiv(div) {
-    div.hidden = true
-}
-
-function getlistItemId(listItem, i) {
-    if (listItem.getAttribute("forArgument") === "true") {
-        return 'For-li-id-' + i;
-    } else {
-        return 'Against-li-id-' + i;
-    }
-}
-
-//TODO If use this one, need to update all child nodes CSS, / id.
-//TODO Perhaps could add last item.
-function getWrapperListItemId(listItem, i, j) {
-    if (listItem.getAttribute("forArgument") === "true") {
-        return 'For-li-id-' + i + '-' + j;
-    } else {
-        return 'Against-li-id-' + i + '-' + j;
-    }
-}
 
 function populateButton(buttonType, parentNodeName, j){
     var buttonToggle = document.createElement('button');
@@ -165,19 +149,6 @@ function populateButton(buttonType, parentNodeName, j){
     buttonToggle.addEventListener("mouseover", handleButtonHover);
     buttonToggle.addEventListener("mouseout", handleButtonUnHover);
     return buttonToggle;
-}
-
-function getButtonId(buttonType, parentNodeName, j) {
-    return "btn" + buttonType + parentNodeName + "-pArguments-" + j;
-}
-function getHiddenValue(buttonType) {
-    //Maybe change this to like rather than blank.
-    if(buttonType === "Like") return true;
-    else return false;
-}
-function getInitialButtonValue(buttonType, j) {
-    if(buttonType === "Like") return ((11 * j) + 6).toString();
-    else return "Show " + buttonType;
 }
 
 
@@ -203,23 +174,10 @@ function populateSourceText(textAreaText, previousReplies) {
     anchorElement.innerHTML = sourceLink;
     textItem.id = 'pSource-' + previousReplies;
     textItem.className = "pSourceStyle";
-    //textItem.innerHTML = sourceLink;
     textItem.appendChild(anchorElement);
     return textItem;
 }
-function getSourceLink(textAreaText) {
-    var indexOfStartOfSource = textAreaText.indexOf("/source=")+9;
-    var sourceLink = textAreaText.substring(indexOfStartOfSource, textAreaText.length-1).toString();
-    return sourceLink;
-}
-function getTextExcludingSource(textAreaText) {
-    if(isSourceIncluded(textAreaText)) {
-        var sourceTag = "/source";
-        var indexOfStartOfSource = textAreaText.indexOf(sourceTag);
-        textAreaText = textAreaText.substring(0, indexOfStartOfSource).toString();
-    }
-    return textAreaText.toString();
-}
+
 
 function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue, j) {
     var wrapper = document.createElement('div');
@@ -229,56 +187,10 @@ function populateSliderForArguments(currentNodeName, parentNodeName, hiddenValue
     wrapper.hidden = hiddenValue;
 
     wrapper.appendChild(populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j));
- //   wrapper.appendChild(populateSliderValueElement(currentNodeName, parentNodeName, j));
 
     return wrapper;
 }
 
-function getButtonClassName(parentNodeName, buttonType) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    var arrowPosition = "";
-    if(buttonType !== "Like") arrowPosition = " up"; //Again horrible hardcoding, and probably better to split into two functions throughout this, for another day.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-
-    return "btn" + buttonType + parentNodeName.substr(0, lengthOfClassName) + arrowPosition;
-
-}
-
-function getSliderWrapperClassName(currentNodeName, parentNodeName) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-    return currentNodeName + "SliderWrapper" + parentNodeName.substr(0, lengthOfClassName) + " override";
-}
-
-function getSliderClassName(currentNodeName, parentNodeName) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-    return currentNodeName + "Slider" + parentNodeName.substr(0, lengthOfClassName) + " override";
-}
-
-function getSliderValueClassName(currentNodeName, parentNodeName) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-    return currentNodeName + "SliderValue" + parentNodeName.substr(0, lengthOfClassName) + " override";
-}
-
-function getTextBoxAreaClassName(parentNodeName) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-    return "TextArea" + parentNodeName.substr(0, lengthOfClassName);
-}
-
-function getSubmitTextBoxAreaClassName(parentNodeName) {
-    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
-    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
-
-    return "submitTextArea" + parentNodeName.substr(0, lengthOfClassName);
-}
 
 
 function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) {
@@ -298,13 +210,13 @@ function populateSliderElement(currentNodeName, parentNodeName, hiddenValue, j) 
     sliderElement.addEventListener("change", handleSliderChange);
     sliderElement.addEventListener("input", handleSliderChange);
     sliderElement.addEventListener("mouseleave", handleSliderLeave);
-    //sliderElement.addEventListener("mouseover", handleSliderHover);
 
     return sliderElement;
 
 }
 
 
+/* Have since deprecated the SliderValue next to in favour of Tooltip, keeping in case of redo.
 function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenValue) {
     var sliderElementValue = document.createElement('div');
     var sliderValueId = currentNodeName + "SliderValue" + parentNodeName + "-pArguments-" + j;
@@ -317,7 +229,7 @@ function populateSliderValueElement(currentNodeName, parentNodeName, j, hiddenVa
     sliderElementValue.innerHTML = sliderElementValue.value;
 
     return sliderElementValue;
-}
+}*/
 
 function populateTextAreaForArguments(parentNodeName, hiddenValue, j) {
     var textAreaWrapper = document.createElement("div");
@@ -358,26 +270,18 @@ function populateSubmitTextAreaForArguments(parentNodeName, hiddenValue, j) {
 }
 
 
-function isArgumentNotStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
-    return unformattedArgumentArray[argumentIndex] != statementArray[i]
+//TODO MUTATORS
+
+function showDiv(div) {
+    div.hidden = false;
 }
 
-function isArgumentForCurrentStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
-    return unformattedArgumentArray[argumentIndex] != statementArray[i + 1];
+function hideDiv(div) {
+    div.hidden = true
 }
 
-function argumentIndexInBounds(argumentIndex, unformattedArgumentArray) {
-    return argumentIndex < unformattedArgumentArray.length;
-}
-function anyChildNodesShowing(div) {
-    for (var i = 0; i < div.childElementCount; i++) {
-        if((div.childNodes[i].value === "reply") && (div.childNodes[i].hidden === false)){
-            return true;
-        }
-    }
 
-    return false;
-}
+
 //We want all the div's to be hiddden
 function hideAllReplyChildNodes(div) {
     for (var i = 0; i < div.childElementCount; i++) {
@@ -413,17 +317,111 @@ function showDivChildNode(div, statementId) {
     div.childNodes[statementId].hidden = false;
 }
 
-
+/*
 function emboldenEvent(event) {
     event.target.style.fontWeight = "bold";
-}
+}*/
 
 function deBoldAllChildNodes(StatementListDiv) {
     for (var i = 0; i < StatementListDiv.childElementCount; i++) {
-        StatementListDiv.childNodes[i].childNodes[0].style.fontWeight = "";
+        //StatementListDiv.childNodes[i].childNodes[0].style.fontWeight = "";
     }
-
 }
+
+
+
+function changeStatementPText(StatementListDivWrapper, selectedText,boldValue) {
+    for(var i = 0; i< StatementListDivWrapper.childNodes.length; i++) {
+        if (isStatementListWrapperText(StatementListDivWrapper,i)) {
+            StatementListDivWrapper.childNodes[i].innerHTML = selectedText;
+            StatementListDivWrapper.childNodes[i].style.fontWeight = boldValue;
+        }
+    }
+}
+function insertStatementHeaderText(StatementListDivWrapper, headerText) {
+    for(var i = 0; i< StatementListDivWrapper.childNodes.length; i++) {
+        if (isStatementListWrapperHeader(StatementListDivWrapper,i)) {
+            StatementListDivWrapper.childNodes[i].innerHTML = headerText;
+        }
+    }
+}
+
+function addTitlePositioningCss() {
+    var titleHeadingDiv = document.getElementById('titleHeading');
+    var className = titleHeadingDiv.childNodes[1].className.toString().replace("titleText", "titleText statementsPage");
+
+    titleHeadingDiv.childNodes[1].className = className;
+}
+function removeTitlePositioningCss() {
+    var titleHeadingDiv = document.getElementById('titleHeading');
+    var className = titleHeadingDiv.childNodes[1].className.toString().replace("statementsPage", "");
+    titleHeadingDiv.childNodes[1].className = className;
+}
+
+function setUserInteracted(event) {
+    // Always returns a number, returns 0 if not true, and anything else if true.
+    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
+    //Therefore hence the bitwise inverse is zero.
+    if(~event.target.id.indexOf("For")){
+        setInteractedEvent(event, "forinteracted");
+    }else if(~event.target.id.indexOf("Against")){
+        setInteractedEvent(event,"againstinteracted");
+    }
+}
+
+function setInteractedEvent(event, interactedEventId){
+    //Replaces all non-digits with blank, up until the first number, then takes that one.
+    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
+    console.log(event.target.id);
+    setStatementInteracted(statementValue, interactedEventId);
+}
+
+function setStatementInteracted(statementValue, interactedSide){
+    var statementListDiv = document.getElementById("StatementListOL");
+    statementListDiv.childNodes[statementValue].setAttribute(interactedSide, "true");
+}
+
+
+function clearTextBox(textBoxDiv, textAreaText) {
+    if (!(textAreaText === "")) {
+        textBoxDiv.value = "";
+        console.log("AddComments and populate text");
+        var relatedDiv = event.target.parentNode.classList[0];
+        var relatedArgumentValue = relatedDiv.slice(relatedDiv.length - 1, relatedDiv.length);
+        console.log(relatedArgumentValue);
+    }
+}
+
+//TODO Add other sliders and buttons, and id to this.
+function addComment(textBoxDiv, textAreaText) {
+    var replyWrapper = document.createElement('div');
+    var originalPost = textBoxDiv.parentNode.parentNode;
+    var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
+    var hiddenValue = true;
+
+    replyWrapper.id = getReplyNumber(originalPost.id, numberOfPreviousReplies);
+    replyWrapper.value = "reply";
+    replyWrapper.hidden = !hiddenValue;
+
+    //Sad that inside this we do the below check as well, but maybe saves us creating two functions, which actually wouldn't be that bad.
+    replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
+
+    if(isSourceIncluded(textAreaText)) {
+        replyWrapper.appendChild(populateSourceText(textAreaText, numberOfPreviousReplies));
+    }
+    replyWrapper.appendChild(populateButton("Thread",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Interactivity",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateSliderForArguments("respect", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+    replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
+
+    // Inside wrapperDiv for original comment.
+    textBoxDiv.parentNode.parentNode.appendChild(replyWrapper);
+}
+
+
+
 
 function handleButtonToggle(event) {
     console.log(event.target.id);
@@ -440,6 +438,304 @@ function handleButtonToggle(event) {
         .attr("trigger", "hover")
         .tooltip('show');
 }
+
+function handleButtonInteraction(buttonDiv,event) {
+    if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction(buttonDiv);
+    else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction(buttonDiv);
+    else setUserInteracted(event);
+
+}
+
+function handleThreadInteraction(buttonDiv) {
+    var parentEventId = buttonDiv.parentNode.id;
+
+    var parentEventDiv = document.getElementById(parentEventId.toString());
+    //TODO Change second check for any of them still shown, hide them.
+    if (anyChildNodesShowing(parentEventDiv)){
+        hideAllReplyChildNodes(parentEventDiv);
+        parentEventDiv.style.fontWeight = "";
+
+    }
+    else if(!anyChildNodesShowing(parentEventDiv)){
+        showAllReplyChildNodes(parentEventDiv);
+        parentEventDiv.style.fontWeight = "bold";
+    }
+
+}
+function handleInteractivityInteraction(buttonDiv) {
+    var paragraphId = getRelatedParagraphId(buttonDiv);
+    var paragraphDivParentId = buttonDiv.parentNode.id;
+    var paragraphDivParentValue = buttonDiv.parentNode.value;
+
+    //TODO Change second check for any of them still shown, hide them.
+
+    if(paragraphDivParentValue === "comment") {
+        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
+        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
+        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
+        toggleTextArea(paragraphId, paragraphDivParentId);
+    }
+    else if(paragraphDivParentValue === "reply"){
+        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
+        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
+        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
+        toggleTextArea(paragraphId, paragraphDivParentId);
+
+    }
+}
+
+
+
+function handleButtonHover(event) {
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+    console.log(buttonDiv.getAttribute("Value"));
+}
+
+function handleButtonUnHover(event) {
+    var buttonDiv = document.getElementById(event.target.id.toString());
+    $(buttonDiv).tooltip('hide');
+
+
+}
+
+function handleSliderChange(event) {
+    console.log(event.target.id);
+    setUserInteracted(event);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+}
+
+function handleSliderHover(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('show');
+
+}
+
+function handleSliderLeave(event) {
+    console.log(event.target.id);
+    var sliderElement = document.getElementById(event.target.id.toString());
+    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+        .attr("trigger", "hover")
+        .tooltip('hide');
+
+}
+
+function handleTextAreaClear(event) {
+    var textAreaElement = document.getElementById(event.target.id);
+    if (textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
+}
+
+function handleSubmitTextArea(event) {
+    var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
+    var textAreaText = textAreaElement.value.toString();
+    clearTextBox(textAreaElement, textAreaText);
+    //TODO fix this remember
+
+
+
+    if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "") {
+        //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
+        addComment(textAreaElement, textAreaText);
+    }
+    else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
+    else alert("You must interact (read, like or vote) with both sides before commenting");
+}
+
+function toggleButtonDiv(relatedParagraphId, parentEventId,buttonType) {
+    var btnElement = "btn" + buttonType + parentEventId + "-" + relatedParagraphId;
+    var btnDiv = document.getElementById(btnElement);
+
+    if (btnDiv.hidden === false) hideDiv(btnDiv);
+    else showDiv(btnDiv);
+
+}
+
+function toggleRespectSliderDiv(relatedparagraphId, parentEventId) {
+    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + relatedparagraphId;
+    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
+    var respectSliderElement = "respectSlider" + parentEventId + "-" + relatedparagraphId;
+    var respectSliderDiv = document.getElementById(respectSliderElement);
+
+    if (respectSliderDiv.hidden === false) {
+        hideDiv(respectSliderDiv);
+        hideDiv(respectSliderWrapperDiv);
+    }
+    else {
+        showDiv(respectSliderDiv);
+        showDiv(respectSliderWrapperDiv);
+    }
+}
+
+function toggleTextArea(eventId, parentEventId) {
+    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
+    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+
+    var textAreaDiv = document.getElementById(textAreaElement);
+    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
+
+    if (textAreaDiv.hidden === false) hideDiv(textAreaDiv);
+    else showDiv(textAreaDiv);
+
+    if (submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
+    else showDiv(submitTextAreaDiv);
+
+}
+
+function toggleRelevancySliderDiv(eventId, parentEventId) {
+    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
+    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
+    var relevancySliderDiv = document.getElementById(relevancySliderElement);
+    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
+    if (relevancySliderDiv.hidden === false) {
+        hideDiv(relevancySliderDiv);
+        hideDiv(relevancySliderWrapperDiv);
+    }
+    else {
+        showDiv(relevancySliderDiv);
+        showDiv(relevancySliderWrapperDiv);
+    }
+}
+//TODO bad mix of Jquery and event handlers but this is not created dynamically like the rest, for now leave.
+$(StatementListDiv).click(function (event) {
+    var statementId = event.target.id.replace("li-id-", "");
+    var selectedText = event.target.innerHTML;
+
+    hideAllChildNodes(StatementListDiv);
+    deBoldAllChildNodes(StatementListDiv);
+
+
+    showDiv(backToStatementsButton);
+    showDiv(ForListDivWrapper);
+    showDiv(AgainstListDivWrapper);
+
+
+    showDivChildNode(ForListDiv, statementId);
+    showDivChildNode(AgainstListDiv, statementId);
+    removeTitlePositioningCss();
+    changeStatementPText(StatementListDivWrapper, selectedText, "bold");
+    insertStatementHeaderText(StatementListDivWrapper, "Statement");
+
+
+});
+$(backToStatementsButton).click(function () {
+    hideAllChildNodes(ForListDiv);
+    hideAllChildNodes(AgainstListDiv);
+
+    hideDiv(ForListDivWrapper);
+    hideDiv(AgainstListDivWrapper);
+    hideDiv(backToStatementsButton);
+
+    changeStatementPText(StatementListDivWrapper, "", "");
+    insertStatementHeaderText(StatementListDivWrapper, "Statements");
+
+    addTitlePositioningCss();
+    showDiv(StatementListDivWrapper);
+    showAllChildNodes(StatementListDiv);
+});
+
+function getButtonId(buttonType, parentNodeName, j) {
+    return "btn" + buttonType + parentNodeName + "-pArguments-" + j;
+}
+function getHiddenValue(buttonType) {
+    return buttonType === "Like";
+}
+function getInitialButtonValue(buttonType, j) {
+    if(buttonType === "Like") return ((11 * j) + 6).toString();
+    else return "Show " + buttonType;
+}
+
+
+function getlistItemId(listItem, i) {
+    if (listItem.getAttribute("forArgument") === "true") {
+        return 'For-li-id-' + i;
+    } else {
+        return 'Against-li-id-' + i;
+    }
+}
+
+//TODO If use this one, need to update all child nodes CSS, / id.
+//TODO Perhaps could add last item.
+function getWrapperListItemId(listItem, i, j) {
+    if (listItem.getAttribute("forArgument") === "true") {
+        return 'For-li-id-' + i + '-' + j;
+    } else {
+        return 'Against-li-id-' + i + '-' + j;
+    }
+}
+
+function getSourceLink(textAreaText) {
+    var indexOfStartOfSource = textAreaText.indexOf("/source=")+9;
+    var sourceLink = textAreaText.substring(indexOfStartOfSource, textAreaText.length-1).toString();
+    return sourceLink;
+}
+function getTextExcludingSource(textAreaText) {
+    if(isSourceIncluded(textAreaText)) {
+        var sourceTag = "/source";
+        var indexOfStartOfSource = textAreaText.indexOf(sourceTag);
+        textAreaText = textAreaText.substring(0, indexOfStartOfSource).toString();
+    }
+    return textAreaText.toString();
+}
+
+function getButtonClassName(parentNodeName, buttonType) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    var arrowPosition = "";
+    if(buttonType !== "Like") arrowPosition = " up"; //Again horrible hardcoding, and probably better to split into two functions throughout this, for another day.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+
+    return "btn" + buttonType + parentNodeName.substr(0, lengthOfClassName) + arrowPosition;
+
+}
+
+function getSliderWrapperClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "SliderWrapper" + parentNodeName.substr(0, lengthOfClassName) + " override";
+}
+
+function getSliderClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "Slider" + parentNodeName.substr(0, lengthOfClassName) + " override";
+}
+/* Similarly deprecated as below.
+function getSliderValueClassName(currentNodeName, parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+    return currentNodeName + "SliderValue" + parentNodeName.substr(0, lengthOfClassName) + " override";
+}*/
+
+function getTextBoxAreaClassName(parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+    return "TextArea" + parentNodeName.substr(0, lengthOfClassName);
+}
+
+function getSubmitTextBoxAreaClassName(parentNodeName) {
+    var lengthOfClassName = 9; //TODO Hardcoded For Value length --HORRIBLE.
+    if (parentNodeName.toString().substr(0, 1) === "A") lengthOfClassName = 13;
+
+    return "submitTextArea" + parentNodeName.substr(0, lengthOfClassName);
+}
+
+
+
+
 function getButtonValue(buttonDiv) {
     if (buttonDiv.getAttribute("buttonType") === "Like") return getButtonLikeValue(buttonDiv);
     else return getButtonToggleValue(buttonDiv);
@@ -483,205 +779,11 @@ function getButtonUpdatedClassName(buttonDiv) {
     return buttonClassName.toString();
 }
 
-function handleButtonInteraction(buttonDiv,event) {
-    if(buttonDiv.getAttribute("buttonType") === "Thread") handleThreadInteraction(buttonDiv);
-    else if(buttonDiv.getAttribute("buttonType") === "Interactivity") handleInteractivityInteraction(buttonDiv);
-    else setUserInteracted(event);
-
-}
-
-function handleThreadInteraction(buttonDiv) {
-    var parentEventId = buttonDiv.parentNode.id;
-    var parentEventValue = buttonDiv.parentNode.value;
-
-    var parentEventDiv = document.getElementById(parentEventId.toString());
-    //TODO Change second check for any of them still shown, hide them.
-    if (anyChildNodesShowing(parentEventDiv)){
-        hideAllReplyChildNodes(parentEventDiv);
-        parentEventDiv.style.fontWeight = "";
-
-    }
-    else if(!anyChildNodesShowing(parentEventDiv)){
-        showAllReplyChildNodes(parentEventDiv);
-        parentEventDiv.style.fontWeight = "bold";
-    }
-    
-}
-function handleInteractivityInteraction(buttonDiv) {
-    var paragraphId = getRelatedParagraphId(buttonDiv);
-    var paragraphDivParentId = buttonDiv.parentNode.id;
-    var paragraphDivParentValue = buttonDiv.parentNode.value;
-
-    var paragraphDivParentDiv = document.getElementById(paragraphDivParentId);
-    //TODO Change second check for any of them still shown, hide them.
-
-    if(paragraphDivParentValue === "comment") {
-        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
-        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
-        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
-        toggleTextArea(paragraphId, paragraphDivParentId);
-    }
-    else if(paragraphDivParentValue === "reply"){
-        toggleButtonDiv(paragraphId, paragraphDivParentId, "Like");
-        toggleRespectSliderDiv(paragraphId, paragraphDivParentId);
-        toggleRelevancySliderDiv(paragraphId, paragraphDivParentId);
-        toggleTextArea(paragraphId, paragraphDivParentId);
-
-    }
-}
 function getRelatedParagraphId(buttonDiv) {
     return buttonDiv.parentNode.childNodes[0].id;
 }
 
-function handleButtonHover(event) {
-    var buttonDiv = document.getElementById(event.target.id.toString());
-    $(buttonDiv).attr("data-original-title", buttonDiv.getAttribute("Value"))
-        .attr("trigger", "hover")
-        .tooltip('show');
 
-    console.log(buttonDiv.getAttribute("Value"));
-}
-
-function handleButtonUnHover(event) {
-    var buttonDiv = document.getElementById(event.target.id.toString());
-    $(buttonDiv).tooltip('hide');
-
-
-}
-
-function handleSliderChange(event) {
-    console.log(event.target.id);
-    setUserInteracted(event);
-    var sliderElement = document.getElementById(event.target.id.toString());
-    //sliderElement.childNodes[0].innerHTML = "Change " + sliderElement.value;
-   // sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
-    //sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-  //  sliderElement.parentNode.childNodes[1].hidden = false;
-    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
-        .attr("trigger", "hover")
-        .tooltip('show');
-
-}
-
-function handleSliderHover(event) {
-    console.log(event.target.id);
-    var sliderElement = document.getElementById(event.target.id.toString());
-    //sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-   // sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id:Hover override";
-    //sliderElement.parentNode.childNodes[1].hidden = false;
-
-    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
-        .attr("trigger", "hover")
-        .tooltip('show');
-
-}
-
-function handleSliderLeave(event) {
-    console.log(event.target.id);
-    var sliderElement = document.getElementById(event.target.id.toString());
-   // sliderElement.parentNode.childNodes[1].innerHTML = sliderElement.value + "%";
-    //sliderElement.parentNode.childNodes[1].className = "respectSliderValueAgainst-li-id override";
-    //sliderElement.parentNode.childNodes[1].hidden = false;
-    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
-        .attr("trigger", "hover")
-        .tooltip('hide');
-
-}
-
-function handleTextAreaClear(event) {
-    var textAreaElement = document.getElementById(event.target.id);
-    if (textAreaElement.innerHTML === "Enter reply here...") textAreaElement.innerHTML = "";
-}
-
-function handleSubmitTextArea(event) {
-    var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
-    var textAreaText = textAreaElement.value.toString();
-    clearTextBox(textAreaElement, textAreaText);
-    //TODO fix this remember
-    if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "" || true) {
-        //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
-        addComment(textAreaElement, textAreaText);
-    }
-    else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
-    else alert("You must interact (read, like or vote) with both sides before commenting");
-    //TODO add another submit, wherby add sources.
-}
-
-function setUserInteracted(event) {
-   // Always returns a number, returns 0 if not true, and anything else if true.
-    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
-    //Therefore hence the bitwise inverse is zero.
-   if(~event.target.id.indexOf("For")){
-       setInteractedEvent(event, "forinteracted");
-   }else if(~event.target.id.indexOf("Against")){
-       setInteractedEvent(event,"againstinteracted");
-   }
-}
-
-function setInteractedEvent(event, interactedEventId){
-    //Replaces all non-digits with blank, up until the first number, then takes that one.
-    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
-    console.log(event.target.id);
-    setStatementInteracted(statementValue, interactedEventId);
-}
-
-function setStatementInteracted(statementValue, interactedSide){
-    var statementListDiv = document.getElementById("StatementListOL");
-    statementListDiv.childNodes[statementValue].setAttribute(interactedSide, "true");
-}
-
-function hasUserInteractedWithBothSides(event) {
-    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
-    var statementListDiv = document.getElementById("StatementListOL");
-
-    return statementListDiv.childNodes[statementValue].getAttribute("forinteracted") === "true" && statementListDiv.childNodes[statementValue].getAttribute("againstinteracted") === "true";
-
-}
-
-function clearTextBox(textBoxDiv, textAreaText) {
-    if (!(textAreaText === "")) {
-        textBoxDiv.value = "";
-        console.log("AddComments and populate text");
-        var relatedDiv = event.target.parentNode.classList[0];
-        var relatedArgumentValue = relatedDiv.slice(relatedDiv.length - 1, relatedDiv.length);
-        console.log(relatedArgumentValue);
-    }
-}
-
-//TODO Add other sliders and buttons, and id to this.
-function addComment(textBoxDiv, textAreaText) {
-    var replyWrapper = document.createElement('div');
-    var originalPost = textBoxDiv.parentNode.parentNode;
-    var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
-    var hiddenValue = true;
-
-    replyWrapper.id = getReplyNumber(originalPost.id, numberOfPreviousReplies);
-    replyWrapper.value = "reply";
-    replyWrapper.hidden = !hiddenValue;
-
-    //Sad that inside this we do the below check as well, but maybe saves us creating two functions, which actually wouldn't be that bad.
-    replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
-
-    if(isSourceIncluded(textAreaText)) {
-        replyWrapper.appendChild(populateSourceText(textAreaText, numberOfPreviousReplies));
-    }
-    replyWrapper.appendChild(populateButton("Thread",replyWrapper.id, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateButton("Interactivity",replyWrapper.id, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateButton("Like",replyWrapper.id, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateSliderForArguments("respect", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateSliderForArguments("relevancy", replyWrapper.id, hiddenValue, numberOfPreviousReplies));
-    replyWrapper.appendChild(populateTextAreaForArguments(replyWrapper.id, hiddenValue, numberOfPreviousReplies));
-
-    // Inside wrapperDiv for original comment.
-    textBoxDiv.parentNode.parentNode.appendChild(replyWrapper);
-}
-function isSourceIncluded(textAreaText) {
-    // Always returns a number, returns 0 if not true, and anything else if true.
-    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
-    //Therefore hence the bitwise inverse is zero.
-    if(~textAreaText.indexOf("\source=") || ~textAreaText.indexOf("\Source=")) return true;
-    return false;
-}
 
 function getReplyNumber(originalPost, numberOfPreviousReplies) {
     return originalPost.toString() + "-" + numberOfPreviousReplies.toString();
@@ -690,78 +792,52 @@ function getReplyNumber(originalPost, numberOfPreviousReplies) {
 function getNumberOfPreviousReplies(originalPostId) {
     return $('[id^=' + originalPostId + ']').length;
 }
-function toggleButtonDiv(relatedParagraphId, parentEventId,buttonType) {
-    var btnElement = "btn" + buttonType + parentEventId + "-" + relatedParagraphId;
-    var btnDiv = document.getElementById(btnElement);
 
-    if (btnDiv.hidden === false) hideDiv(btnDiv);
-    else showDiv(btnDiv);
 
+
+function isArgumentNotStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
+    return unformattedArgumentArray[argumentIndex] != statementArray[i]
 }
 
-function toggleRespectSliderDiv(relatedparagraphId, parentEventId) {
-    var respectSliderWrapperElement = "respectSliderWrapper" + parentEventId + "-" + relatedparagraphId;
-    var respectSliderWrapperDiv = document.getElementById(respectSliderWrapperElement);
-    var respectSliderValueElement = "respectSliderValue" + parentEventId + "-" + relatedparagraphId;
-    var respectSliderValueDiv = document.getElementById(respectSliderValueElement);
-    var respectSliderElement = "respectSlider" + parentEventId + "-" + relatedparagraphId;
-    var respectSliderDiv = document.getElementById(respectSliderElement);
-
-    if (respectSliderDiv.hidden === false) {
-        hideDiv(respectSliderDiv);
-        //hideDiv(respectSliderValueDiv);
-        hideDiv(respectSliderWrapperDiv);
-    }
-    else {
-        showDiv(respectSliderDiv);
-        //showDiv(respectSliderValueDiv);
-        showDiv(respectSliderWrapperDiv);
-    }
+function isArgumentForCurrentStatement(unformattedArgumentArray, argumentIndex, statementArray, i) {
+    return unformattedArgumentArray[argumentIndex] != statementArray[i + 1];
 }
 
-function toggleTextArea(eventId, parentEventId) {
-    var textAreaElement = "TextArea" + parentEventId + "-" + eventId;
-    var submitTextAreaElement = "submitTextArea" + parentEventId + "-" + eventId;
+function argumentIndexInBounds(argumentIndex, unformattedArgumentArray) {
+    return argumentIndex < unformattedArgumentArray.length;
+}
+function anyChildNodesShowing(div) {
+    for (var i = 0; i < div.childElementCount; i++) {
+        if((div.childNodes[i].value === "reply") && (div.childNodes[i].hidden === false)){
+            return true;
+        }
+    }
 
-    var textAreaDiv = document.getElementById(textAreaElement);
-    var submitTextAreaDiv = document.getElementById(submitTextAreaElement);
-
-    if (textAreaDiv.hidden === false) hideDiv(textAreaDiv);
-    else showDiv(textAreaDiv);
-
-    if (submitTextAreaDiv.hidden === false) hideDiv(submitTextAreaDiv);
-    else showDiv(submitTextAreaDiv);
-
+    return false;
 }
 
-function toggleRelevancySliderDiv(eventId, parentEventId) {
-    var relevancySliderValueElement = "relevancySliderValue" + parentEventId + "-" + eventId;
-    var relevancySliderWrapperElement = "relevancySliderWrapper" + parentEventId + "-" + eventId;
-    var relevancySliderElement = "relevancySlider" + parentEventId + "-" + eventId;
-    var relevancySliderDiv = document.getElementById(relevancySliderElement);
-    var relevancySliderValueDiv = document.getElementById(relevancySliderValueElement);
-    var relevancySliderWrapperDiv = document.getElementById(relevancySliderWrapperElement);
-    if (relevancySliderDiv.hidden === false) {
-        hideDiv(relevancySliderDiv);
-        //hideDiv(relevancySliderValueDiv);
-        hideDiv(relevancySliderWrapperDiv);
-    }
-    else {
-        showDiv(relevancySliderDiv);
-        //showDiv(relevancySliderValueDiv);
-        showDiv(relevancySliderWrapperDiv);
-    }
+function isStatementListWrapperText(StatementListDivWrapper, i) {
+    return StatementListDivWrapper.childNodes[i].id === "selectedStatementText";
+}
+function isStatementListWrapperHeader(StatementListDivWrapper, i) {
+    return StatementListDivWrapper.childNodes[i].id === "headerStatement";
 }
 
-$(StatementListDiv).click(function (event) {
-    var statementId = event.target.parentNode.id.replace("li-id-", "");
-    hideAllChildNodes(ForListDiv);
-    hideAllChildNodes(AgainstListDiv);
-    deBoldAllChildNodes(StatementListDiv);
 
-    showDivChildNode(ForListDiv, statementId);
-    showDivChildNode(AgainstListDiv, statementId);
+function isSourceIncluded(textAreaText) {
+    // Always returns a number, returns 0 if not true, and anything else if true.
+    // ~ is the bitwise inverse, This statement minus the ~ returns -1, hence in two's compliment, -1 is represented as all 1's.
+    //Therefore hence the bitwise inverse is zero.
+    if(~textAreaText.indexOf("\source=") || ~textAreaText.indexOf("\Source=")) return true;
+    return false;
+}
 
-    emboldenEvent(event);
 
-});
+function hasUserInteractedWithBothSides(event) {
+    var statementValue = event.target.id.toString().replace(/^\D+|\D*$/g, "").substring(0,1);
+    var statementListDiv = document.getElementById("StatementListOL");
+
+    return statementListDiv.childNodes[statementValue].getAttribute("forinteracted") === "true" && statementListDiv.childNodes[statementValue].getAttribute("againstinteracted") === "true";
+
+}
+initialiseWebPageContent();
