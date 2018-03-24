@@ -18,24 +18,24 @@ var StatementListDivWrapper = document.getElementById('StatementListWrapper');
 
 //TODO Grab this dynamically using AJAX request to Java backend? Rather than Hardcoded.
 //TODO For now as won't change user studies leave for later date.
-var statementArray = ['Brexit is a bad idea',
-    'Immigration is ruining our culture',
-    'I am so proud of our queen',
-    'There should be no privacy, if it means catching terrorists',
-    'Global warming is our fault',
-    'I should be able to eat whatever animal I want.'];
-var unformattedForArguments = ['Brexit is a bad idea', 'Agree as it means leaving the single market', 'It could cost our economy loads',
-    'Immigration is ruining our culture', '+1 Agree I cant go down my high street without seeing an immigrant',
-    'I am so proud of our queen', 'Shes done our country the world of good.',
-    'There should be no privacy, if it means catching terrorists', 'Agree catch those damn terrorists, if you have nothing to fear you have nothing to hide',
-    'Global warming is our fault', 'Totally agree we should monitor how much we use.',
-    'I should be able to eat whatever animal I want.', 'We are the top of the food chain, therefore I can eat Rhino if I want to.'];
-var unformattedAgainstArguments = ['Brexit is a bad idea', 'Disagree as means we can make our own rules', 'Also results in uncontrolled immigration',
-    'Immigration is ruining our culture', 'Immigration brings loads of new culture that expands our world view.',
-    'I am so proud of our queen', 'I disagree with the monarchy regardless',
-    'There should be no privacy, if it means catching terrorists', 'Privacy is our right, it should not be thrown away',
-    'Global warming is our fault', 'Rubbish, scientists just trying to earn a big grant',
-    'I should be able to eat whatever animal I want.', 'Horrible, we share this planet with them, we are no more important than them.'];
+var statementArray = ['Brexit will probably be a decision we regret',
+    'Immigration is damaging to our British culture',
+    'The Queen does so much for our country',
+    'Catching terrorists should come before our right to privacy',
+    'Global warming is the fault of humans',
+    'Lecturers should not be striking'];
+var unformattedForArguments = ['Brexit will probably be a decision we regret', 'I Agree as it means leaving the single market', 'It could be very damaging to our economy',
+    'Immigration is damaging to our British culture', '+1 Agree I cant go down my high street without seeing an immigrant',
+    'The Queen does so much for our country', 'Shes done our country and other nations the world of good.',
+    'Catching terrorists should come before our right to privacy', 'Agree catch those damn terrorists, if you have nothing to fear you have nothing to hide',
+    'Global warming is the fault of humans', 'Totally agree we should monitor how much we use.',
+    'Lecturers should not be striking', 'I agree they are selfish, I do not get anywhere near enough pension as they do!'];
+var unformattedAgainstArguments = ['Brexit will probably be a decision we regret', 'I disagree with your point, as means we can make our own rules', 'I respect your opinion but it being in the EU means no control over our borders',
+    'Immigration is damaging to our British culture', 'Immigration brings loads of new culture, we should not be inwardly thinking but looking outwards for growth of culture.',
+    'The Queen does so much for our country', 'In todays society, there is no place for a monarchy',
+    'Catching terrorists should come before our right to privacy', 'Privacy is our right, it should not be thrown away for a minority, although despicable number of people',
+    'Global warming is the fault of humans', 'I find it hard to grasp how its not just nature doing its thing, its done this in the past heated up and cooled down.',
+    'Lecturers should not be striking', 'I disagree although it may be us the students who are suffering they are trying to minimise that, they are losing £10k a year from their pensions!'];
 function initialiseWebPageContent() {
     var againstStatements = populateReasoningStatementArray(statementArray, unformattedAgainstArguments);
     var forStatements = populateReasoningStatementArray(statementArray, unformattedForArguments);
@@ -122,12 +122,12 @@ function populateWordCloud() {
     AgainstListDivWrapper.hidden = "true";
 
     var list=[
-        ['Brexit is a bad idea',48],
-        ['Immigration is ruining our culture', 20],
-        ['I am so proud of our Queen', 25],
-        ['There should be no privacy, if it means catching terrorists', 24],
-        ['Global warming is our fault', 24],
-        ['I should be able to eat whatever animal I want.', 15]
+        ['Brexit will probably be a decision we regret',48],
+        ['Immigration is damaging to our British culture', 20],
+        ['The Queen does so much for our country', 25],
+        ['Catching terrorists should come before our right to privacy', 24],
+        ['Global warming is the fault of humans', 24],
+        ['Lecturers should not be striking', 15]
     ];
     WordCloud(document.getElementById('StatementListOL'), {list: list});
 }
@@ -538,12 +538,12 @@ function handleTextAreaClear(event) {
 function handleSubmitTextArea(event) {
     var textAreaElement = document.getElementById(event.target.parentNode.childNodes[0].id);
     var textAreaText = textAreaElement.value.toString();
-    clearTextBox(textAreaElement, textAreaText);
     //TODO fix this remember
 
 
 
     if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "") {
+        clearTextBox(textAreaElement, textAreaText);
         //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
         addComment(textAreaElement, textAreaText);
     }
