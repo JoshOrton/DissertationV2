@@ -46,6 +46,10 @@ function initialiseWebPageContent() {
     populateArgumentsAsUnorderedList(ForListDiv, forStatements, true);
 
     populateWordCloud();
+
+    //Hardcoding this for interviews to give idea of how to interact on website and how to provide sources.
+    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-pArguments-1"),  "Please could you possibly provide a source to backup your statement on how it could be very damaging to our economy?");
+    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-1-pArguments-1"),  "Sure so one example of this can be seen by the report done by the director of Institute of Fiscal Studies, Paul Johnson regarding food prices /source='https://www.ifs.org.uk/publications/9562 ");
 }
 
 
