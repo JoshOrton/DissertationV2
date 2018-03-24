@@ -28,8 +28,8 @@ var unformattedForArguments = ['Brexit will probably be a decision we regret', '
     'Immigration is damaging to our British culture', '+1 Agree I cant go down my high street without seeing an immigrant',
     'The Queen does so much for our country', 'Shes done our country and other nations the world of good.',
     'Catching terrorists should come before our right to privacy', 'Agree catch those damn terrorists, if you have nothing to fear you have nothing to hide',
-    'Global warming is the fault of humans', 'Totally agree we should monitor how much we use.',
-    'Lecturers should not be striking', 'I agree they are selfish, I do not get anywhere near enough pension as they do!'];
+    'Global warming is the fault of humans', 'Totally agree we should monitor how much fossil fuels we produce.',
+    'Lecturers should not be striking', 'I agree they are being selfish and insensitive to the needs of their students'];
 var unformattedAgainstArguments = ['Brexit will probably be a decision we regret', 'I disagree with your point, as means we can make our own rules', 'I respect your opinion but it being in the EU means no control over our borders',
     'Immigration is damaging to our British culture', 'Immigration brings loads of new culture, we should not be inwardly thinking but looking outwards for growth of culture.',
     'The Queen does so much for our country', 'In todays society, there is no place for a monarchy',
