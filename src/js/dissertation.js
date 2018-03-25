@@ -510,11 +510,18 @@ function handleSliderChange(event) {
     console.log(event.target.id);
     setUserInteracted(event);
     var sliderElement = document.getElementById(event.target.id.toString());
-    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+    var sliderText = getSliderText(sliderElement);
+    $(sliderElement).attr("data-original-title", sliderText + sliderElement.value + "%")
         .attr("trigger", "hover")
         .tooltip('show');
 
 }
+function getSliderText(sliderElement){
+    if(sliderElement.className.match("respect")) return "Respect: ";
+    else return "Relevancy: ";
+}
+
+
 
 function handleSliderHover(event) {
     console.log(event.target.id);
@@ -528,7 +535,8 @@ function handleSliderHover(event) {
 function handleSliderLeave(event) {
     console.log(event.target.id);
     var sliderElement = document.getElementById(event.target.id.toString());
-    $(sliderElement).attr("data-original-title", sliderElement.value + "%")
+    var sliderText = getSliderText(sliderElement);
+    $(sliderElement).attr("data-original-title", sliderText + sliderElement.value + "%")
         .attr("trigger", "hover")
         .tooltip('hide');
 
