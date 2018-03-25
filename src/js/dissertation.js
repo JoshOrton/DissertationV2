@@ -410,7 +410,7 @@ function addComment(textBoxDiv, textAreaText, hiddenVal) {
     replyWrapper.id = getReplyNumber(originalPost.id, numberOfPreviousReplies);
     replyWrapper.value = "reply";
     if(forInterviews(hiddenVal)) {
-        replyWrapper.hidden = false;
+        replyWrapper.hidden = true;
     }
     else replyWrapper.hidden = !hiddenVal;
     //Sad that inside this we do the below check as well, but maybe saves us creating two functions, which actually wouldn't be that bad.
