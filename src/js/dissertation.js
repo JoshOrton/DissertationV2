@@ -573,11 +573,11 @@ function handleSubmitTextArea(event) {
 
     if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "") {
         clearTextBox(textAreaElement, textAreaText);
-        //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
+        alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
         addComment(textAreaElement, textAreaText, true);
     }
     else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
-    else alert("You must interact (read, like or vote) with both sides before commenting");
+    else alert("You must interact by liking or sliding the sliders with both sides before commenting");
 }
 
 function toggleButtonDiv(relatedParagraphId, parentEventId,buttonType) {
