@@ -48,8 +48,8 @@ function initialiseWebPageContent() {
     populateWordCloud();
 
     //Hardcoding this for interviews to give idea of how to interact on website and how to provide sources.
-    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-pArguments-1"),  "Please could you possibly provide a source to backup your statement on how it could be very damaging to our economy?");
-    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-1-pArguments-1"),  "Sure so one example of this can be seen by the report done by the director of Institute of Fiscal Studies, Paul Johnson regarding food prices /source='https://www.ifs.org.uk/publications/9562 ");
+    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-pArguments-1"),  "Please could you possibly provide a source to backup your statement on how it could be very damaging to our economy?", true);
+    addComment(document.getElementById("TextAreaFor-li-id-0-1-0-1-pArguments-1"),  "Sure so one example of this can be seen by the report done by the director of Institute of Fiscal Studies, Paul Johnson regarding food prices /source='https://www.ifs.org.uk/publications/9562 ", true);
 }
 
 
@@ -397,15 +397,15 @@ function clearTextBox(textBoxDiv, textAreaText) {
 }
 
 //TODO Add other sliders and buttons, and id to this.
-function addComment(textBoxDiv, textAreaText) {
+function addComment(textBoxDiv, textAreaText, hiddenVal) {
     var replyWrapper = document.createElement('div');
     var originalPost = textBoxDiv.parentNode.parentNode;
     var numberOfPreviousReplies = getNumberOfPreviousReplies(originalPost.id);
-    var hiddenValue = true;
+    var hiddenValue = hiddenVal;
 
     replyWrapper.id = getReplyNumber(originalPost.id, numberOfPreviousReplies);
     replyWrapper.value = "reply";
-    replyWrapper.hidden = !hiddenValue;
+    replyWrapper.hidden = hiddenValue;
 
     //Sad that inside this we do the below check as well, but maybe saves us creating two functions, which actually wouldn't be that bad.
     replyWrapper.appendChild(populateArgumentReply(textAreaText, numberOfPreviousReplies));
@@ -460,11 +460,22 @@ function handleThreadInteraction(buttonDiv) {
         parentEventDiv.style.fontWeight = "";
 
     }
-    else if(!anyChildNodesShowing(parentEventDiv)){
+    else if(!anyChildNodesShowing(parentEventDiv) && hasChildNodes(parentEventDiv)){
         showAllReplyChildNodes(parentEventDiv);
         parentEventDiv.style.fontWeight = "bold";
     }
 
+}
+
+//I know bit of bad practice for now.
+function hasChildNodes(div) {
+    for (var i = 0; i < div.childElementCount; i++) {
+        if(div.childNodes[i].value === "reply"){
+            return true;
+        }
+    }
+
+    return false;
 }
 function handleInteractivityInteraction(buttonDiv) {
     var paragraphId = getRelatedParagraphId(buttonDiv);
@@ -557,7 +568,7 @@ function handleSubmitTextArea(event) {
     if(hasUserInteractedWithBothSides(event) &&textAreaText.toString() !== "") {
         clearTextBox(textAreaElement, textAreaText);
         //alert("Congrats, you have interacted with both points of view for this topic, and can now reply with your views");
-        addComment(textAreaElement, textAreaText);
+        addComment(textAreaElement, textAreaText, false);
     }
     else if(textAreaText.toString() === "") alert("Please ensure you have entered text into the box.");
     else alert("You must interact (read, like or vote) with both sides before commenting");
